@@ -100,6 +100,8 @@ global function NaturalLogarithmAtom(atom a)
     end if
     x = 1 - a
     last = 0
+    p = 1
+    sum = 0
     for k = 1 to 1000000000 do
       p *= x
       sum += DivAtom(p, k)
