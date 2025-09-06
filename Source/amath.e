@@ -32,9 +32,9 @@ global function MultInvAtom(atom x)
       exit
     end if
     r = g * ( 2 - t )
-    if r = g then -- question, is this necessary?
-      exit
-    end if
+    -- if r = g then -- question, is this necessary?
+    --   exit
+    -- end if
   end for
   return g
 end function
