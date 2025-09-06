@@ -42,3 +42,19 @@ global function DivAtom(atom n, atom d)
   return r
 end function
 
+global function NthRootAtom(atom x, integer n)
+  atom quotient, average, guess
+  guess = power(x, MultInvAtom(n))
+  quotient = DivAtom(x, power(guess, n-1))
+  average = DivAtom(quotient + ((n-1) * guess)), n)
+  return average
+end function
+
+global function SqrtAtom(atom x)
+  return NthRootAtom(x, 2)
+end function
+
+global function CbrtAtom(atom x)
+  return NthRootAtom(x, 3)
+end function
+
