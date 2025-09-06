@@ -19,8 +19,9 @@ global constant AMATH_ITERS = 10000
 
 global function MultInvAtom(atom x)
 -- performs 1/x
-  atom r, t, g
+  atom t, g, last
   g = 1 / x
+  last = 0
   for i = 1 to AMATH_ITERS do
     t = g * x
     if AMATH_DEBUG then
@@ -28,13 +29,11 @@ global function MultInvAtom(atom x)
         exit
       end if
       printf(2, "calc [%d] corrected %g\n", {i, t - 1})
-    elsif t = 1 then
+    elsif t = 1 or t = last then
       exit
     end if
-    r = g * ( 2 - t )
-    -- if r = g then -- question, is this necessary?
-    --   exit
-    -- end if
+    g *= ( 2 - t )
+    last = t
   end for
   return g
 end function
