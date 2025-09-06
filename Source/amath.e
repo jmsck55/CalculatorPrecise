@@ -29,7 +29,10 @@ global function MultInvAtom(atom x)
         exit
       end if
       printf(2, "calc [%d] corrected %g\n", {i, t - 1})
-    elsif t = 1 or t = last then
+    elsif t = 1 then
+      exit
+    end if
+    if t = last then
       exit
     end if
     g *= ( 2 - t )
