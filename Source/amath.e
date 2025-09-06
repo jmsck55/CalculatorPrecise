@@ -63,3 +63,52 @@ global function CbrtAtom(atom x)
   return NthRootAtom(x, 3)
 end function
 
+-- Raw function: Natural Logarithm
+
+global function NaturalLogarithmAtom(atom a)
+    -- Function: NaturalLogarithm()
+    -- Use for testing the method.
+    -- Alternative, between 0 and 2 exclusively:
+    -- ln(x) = - Sum[k = 1 to inf] ((-1)^k * (-1 + x)^k) / k, for abs(-1 + x) < 1; x > 0 and x < 2;
+    -- ((-1)^k * (-1 + x)^k) / k
+    -- ((-x + 1)^k) / k
+    -- Alternative, away from 0 to 2 exclusively: // Use factoring of "e" instead.
+    -- ln(x) = ln(-1 + x) - Sum[k = 1 to inf] ((-1)^k * (-1 + x)^(-k)) / k, for abs(-1 + x) > 1, x < 0 or x > 2;
+    --
+    -- precalculate:
+    -- xNegativePlusOne = (1 - x), then multiply, and store as "p".
+    -- k = 1, (xNegativePlusOne^1) / 1
+    -- k = 2, (xNegativePlusOne^2) / 2
+    -- k = 3, (xNegativePlusOne^3) / 3
+    -- k = 4, (xNegativePlusOne^4) / 4
+    -- k = 5, (xNegativePlusOne^5) / 5
+    -- Then, summate and negate, then return sum:
+    -- while 1 do
+    --  p *= xNegativePlusOne
+    --  sum += p / k
+    --  if k == inf then -- as k approaches infinity.
+    --    exit -- break;
+    --  end if
+    --  k += 1
+    -- end while
+    -- return - (sum)
+    atom x, p, sum, last
+    if a <= 0 then
+      abort(1)
+    elsif a >= 2 then
+      return {} -- to do later.
+    end if
+    x = 1 - a
+    last = 0
+    for k = 1 to 1000000000 do
+      p *= x
+      sum += DivAtom(p, k)
+      if sum = last then
+        exit
+      end if
+      last = sum
+    end for
+    return - (sum)
+end function
+
+-- more functions to come.
