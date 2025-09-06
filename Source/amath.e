@@ -19,7 +19,7 @@ global constant AMATH_ITERS = 10000
 
 global function MultInvAtom(atom x)
 -- performs 1/x
-  atom t, g
+  atom r, t, g
   g = 1 / x
   for i = 1 to AMATH_ITERS do
     t = g * x
@@ -31,7 +31,10 @@ global function MultInvAtom(atom x)
     elsif t = 1 then
       exit
     end if
-    g *= ( 2 - t )
+    r = g * ( 2 - t )
+    if r = g then -- question, is this necessary?
+      exit
+    end if
   end for
   return g
 end function
