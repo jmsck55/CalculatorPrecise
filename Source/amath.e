@@ -113,4 +113,28 @@ global function NaturalLogarithmAtom(atom a)
     return - (sum)
 end function
 
+global function NaturalExponentiationAtom(atom x)
+-- using taylor series
+-- https://en.wikipedia.org/wiki/TaylorSeries
+--
+-- -- exp(1) = sum of k=0 to inf (1/k!)
+-- -- exp(x) = sum of k=0 to inf ((x^k)/k!)
+--
+  atom sum, num, den, last
+  num = 1
+  den = 1
+  sum = 1
+  last = 0
+  for i = 1 to 1000000000 do
+    num *= x
+    den *= i -- number of iterations
+    sum += DivAtom(num, den)
+    if sum = last then
+      exit
+    end if
+    last = sum
+  end for
+  return sum
+end function
+
 -- more functions to come.
