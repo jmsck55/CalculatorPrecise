@@ -63,7 +63,7 @@ global function CbrtAtom(atom x)
   return NthRootAtom(x, 3)
 end function
 
-global function NaturalExponentiationAtom(atom x)
+global function ExpAtom(atom x)
 -- using taylor series
 -- https://en.wikipedia.org/wiki/TaylorSeries
 --
@@ -89,9 +89,9 @@ end function
 
 -- Raw function: Natural Logarithm
 
-global constant ACONST_E = NaturalExponentiationAtom(1)
+global constant ACONST_E = ExpAtom(1)
 
-global function NaturalLogarithmAtom(atom a)
+global function LnAtom(atom a)
     -- Function: NaturalLogarithm()
     -- Use for testing the method.
     -- Alternative, between 0 and 2 exclusively:
@@ -199,7 +199,7 @@ global function SinAtom(atom a)
 end function
 
 global function TanAtom(atom a)
-  return DivAtom(SineAtom(a), CosAtom(a))
+  return DivAtom(SinAtom(a), CosAtom(a))
 end function
 
 -- arc functions
@@ -232,6 +232,8 @@ global function ArcTanAtom(atom a)
   return r
 end function
 
+global constant ACONST_PI = ArcTanAtom(1) * 4
+
 global function ArcSinAtom(atom a)
 -- arcsin(x) = arctan( x / sqrt(1 - x^2) )
   atom r
@@ -252,6 +254,137 @@ global function ArcCosAtom(atom a)
   r = DivAtom(r, a)
   r = ArcTanAtom(r)
   return r
+end function
+
+-- other trig functions
+
+-- ArcCosh
+-- ArcCot
+-- ArcCoth
+-- ArcCsc
+-- ArcCsch
+-- ArcSec
+-- ArcSech
+-- ArcSinh
+-- ArcTan2
+-- ArcTanh
+-- Cosh
+-- Cot
+-- Coth
+-- Csc
+-- Csch
+-- Sec
+-- Sech
+-- Sinh
+-- Tanh
+
+global function ArcCoshAtom(atom a)
+-- arccosh(x) = x >= 1; ln(x + sqrt(x^2 - 1))
+  atom r
+  if a < 1 then
+    abort(1)
+  end if
+  r = SqrtAtom(a * a - 1)
+  r = LnAtom(a + r)
+  return r
+end function
+
+global function ArcCotAtom(atom a)
+    atom r
+    if a = 0 then
+        return DivAtom(ACONST_PI, 2)
+    end if
+    r = ArcTanAtom(MultInvAtom(a))
+    if a < 0 then
+        r += ACONST_PI
+    end if
+    return r
+end function
+
+global function ArcCothAtom(atom a)
+-- arccoth(x) = abs(x) > 1; ln((x + 1)/(x - 1)) / 2
+    atom r
+    if abs(a) <= 1 then
+        abort(1)
+    end if
+    r = DivAtom(a + 1, a - 1)
+    r = DivAtom(LnAtom(r), 2)
+    return r
+end function
+
+global function ArcCscAtom(atom a)
+  atom r
+  r = ArcSinAtom(MultInvAtom(a))
+  return r
+end function
+
+global function ArcCschAtom(atom a)
+-- arccsch(x) = x != 0; 1 / x => a; ln(a + sqrt(a^2 + 1))
+    atom r
+    if a = 0 then
+        abort(1)
+    end if
+    r = MultInvAtom(a)
+    r = LnAtom(r + SqrtAtom(r * r + 1))
+    return r
+end function
+
+global function ArcSecAtom(atom a)
+    atom r
+    r = ArcCosAtom(MultInvAtom(a))
+    return r
+end function
+
+global function ArcSechAtom(atom a)
+  return 
+end function
+
+global function ArcSinhAtom(atom a)
+  return 
+end function
+
+global function ArcTan2Atom(atom a, atom b)
+  return 
+end function
+
+global function ArcTanhAtom(atom a)
+  return 
+end function
+
+global function CoshAtom(atom a)
+  return 
+end function
+
+global function CotAtom(atom a)
+  return 
+end function
+
+global function CothAtom(atom a)
+  return 
+end function
+
+global function CscAtom(atom a)
+  return 
+end function
+
+global function CschAtom(atom a)
+  return 
+end function
+
+global function SecAtom(atom a)
+  return 
+end function
+
+global function SechAtom(atom a)
+  return 
+end function
+
+global function SinhAtom(atom a)
+  return 
+end function
+
+global function TanhAtom(atom a)
+  return 
 end function
 
 -- more functions to come.
