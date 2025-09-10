@@ -1,4 +1,4 @@
-6-- Copyright (c) 2025 James Cook
+-- Copyright (c) 2025 James Cook
 -- amath.e
 -- Description: Accurate math routines, using Newton's method.
 -- Author: James Cook (jmsck55 AT gmail DOT com)
@@ -147,6 +147,111 @@ global function NaturalLogarithmAtom(atom a)
       last = sum
     end for
     return f - (sum)
+end function
+
+-- Trig functions
+
+global function CosAtom(atom a)
+-- cos(x) = 1 - ((x^2)/(2!)) + ((x^4)/(4!)) - ((x^6)/(6!)) + ((x^8)/(8!)) - ...
+  atom f, r, d, c, x
+  f = 1
+  r = 1
+  d = -1
+  c = 0
+  x = a
+  for i = 2 to 1000000000 by 2 do
+    f *= i
+    x *= a
+    r += (d * DivAtom(x, f))
+    if r = c then
+      exit
+    end if
+    c = r
+    f *= (i + 1)
+    x *= a
+    d *= (-1)
+  end for
+  return r
+end function
+
+global function SineAtom(atom a)
+-- sine(x) = x - ((x^3)/(3!)) + ((x^5)/(5!)) - ((x^7)/(7!)) + ((x^9)/(9!)) - ...
+  atom f, r, d, c, x
+  integer i
+  f = 2
+  r = a
+  d = -1
+  c = 0
+  x = a * a
+  for i = 3 to 1000000001 by 2 do
+    f *= i
+    x *= a
+    r += (d * DivAtom(x, f))
+    if r = c then
+      exit
+    end if
+    c = r
+    f *= (i + 1)
+    x *= a
+    d *= (-1)
+  end for
+  return r
+end function
+
+global function TanAtom(atom a)
+  return DivAtom(SineAtom(a), CosAtom(a))
+end function
+
+-- arc functions
+
+global function ArcTanAtom(atom a)
+-- Begin ArcTanExpA()
+--                z        +inf         n             2kz^2
+-- arctan(z) = ------- * Sumation of Product of --------------------
+--             1 + z^2     n=0         k=1      (2k + 1) * (1 + z^2)
+--
+-- (The term in the sum for n = 0 is the empty product, so is 1.)
+
+-- ans = (z / (1 + z*z)) * Sum [ n=0 to +inf ] Prod [ k=1 to n ] (2kz*z) / ((2k + 1) * (1 + z*z))
+
+  atom b, r, s, p, c
+  b = a * a + 1
+  s = 1
+  for n = 1 to 1000000000 do
+    p = 1
+    for k = 1 to n do
+      p *= DivAtom(k * 2 * (b - 1), (k * 2 + 1) * b)
+    end for
+    c = s
+    s += p
+    if s = c then
+      exit
+    end if
+  end for
+  r = DivAtom(a, b) * s
+  return r
+end function
+
+global function ArcSinAtom(atom a)
+-- arcsin(x) = arctan( x / sqrt(1 - x^2) )
+  atom r
+  r = SqrtAtom(1 - a * a)
+  r = DivAtom(a, r)
+  r = ArcTanAtom(r)
+  return r
+end function
+
+global function ArcCosAtom(atom a)
+-- arccos(x) = arctan( sqrt(1 - x^2) / x )
+-- Limited domain: -1 to 1
+-- Also:
+--   arccos(x) = arcsin(1) - arcsin(x)
+--   arccos(x) = (EunPi / 2) - arcsin(x)
+  atom r
+  r = SqrtAtom(1 - a * a)
+  r = DivAtom(r, a)
+  r = ArcTanAtom(r)
+  return r
 end function
 
 -- more functions to come.
