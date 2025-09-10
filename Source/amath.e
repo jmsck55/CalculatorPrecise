@@ -355,6 +355,73 @@ global function ArcTan(object x)
   return s
 end function
 
+global function ArcTan2Atom(atom y, atom x)
+-- ArcTan2(y, x) = ArcTan(y/x)
+--
+-- The comments below use UTF-8
+--
+-- atan2(y,x) = arctan(y/x) if x > 0,
+-- atan2(y,x) = arctan(y/x) + π if x < 0 and y≥0,
+-- atan2(y,x) = arctan(y/x) - π if x < 0 and y < 0,
+-- atan2(y,x) = +π / 2 if x=0 and y > 0,
+-- atan2(y,x) = - π / 2 if x=0 and y < 0,
+-- atan2(y,x) = undefined if x=0 and y=0
+--
+-- Table:
+--      x     arctan(x) (°)  arctan(x) (rad.)
+--      -∞    -90°   -π/2
+--      -√3   -60°   -π/3
+--      -1    -45°   -π/4
+--      -1/√3 -30°   -π/6
+--      0       0°     0
+--      1/√3  30°    π/6
+--      1     45°    π/4
+--      √3    60°    π/3
+--      +∞    90°    π/2
+--
+    atom tmp
+    if x = 0 then -- x = 0
+        if y = 0 then -- y = 0
+            abort(1)
+        end if
+        tmp = ACONST_PI / 2 -- half PI.
+        if y > 0 then -- y > 0
+            return tmp
+        elsif y < 0 then -- y < 0
+            return -(tmp) -- negated tmp
+        end if
+    end if
+    tmp = ArcTanAtom(DivAtom(y, x))
+    if x > 0 then -- x > 0
+        return tmp
+    end if
+    if y < 0 then -- y < 0
+        return tmp - ACONST_PI
+    end if
+    return tmp + ACONST_PI
+end function
+
+global function ArcTan2(object y, object x)
+  sequence s
+  if atom(y) and atom(x) then
+    return ArcTan2Atom(y, x)
+  end if
+  if atom(y) then
+    y = repeat(y, length(x))
+  end if
+  if atom(x) then
+    x = repeat(x, length(y))
+  end if
+  if length(y) != length(x) then
+    abort(1)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcTan2(y[i], x[i])
+  end for
+  return s
+end function
+
 global function ArcSinAtom(atom a)
 -- arcsin(x) = arctan( x / sqrt(1 - x^2) )
   atom r
