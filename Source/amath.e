@@ -43,13 +43,15 @@ global function MultInvAtom(atom x)
 end function
 
 global function MultInv(object x)
+    sequence s
     if atom(x) then
         return MultInvAtom(x)
     end if
+    s = repeat(0, length(x))
     for i = 1 to length(x) do
-        x[i] = MultInv(x[i])
+        s[i] = MultInv(x[i])
     end for
-    return x
+    return s
 end function
 
 global function DivAtom(object n, atom d)
