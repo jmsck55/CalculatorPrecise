@@ -151,6 +151,14 @@ end function
 
 -- Trig functions
 
+-- cos
+-- sin
+-- tan
+-- arctan
+-- arccos
+-- arcsin
+-- ACONST_PI
+
 global function CosAtom(atom a)
 -- cos(x) = 1 - ((x^2)/(2!)) + ((x^4)/(4!)) - ((x^6)/(6!)) + ((x^8)/(8!)) - ...
   atom f, r, d, c, x
@@ -199,7 +207,9 @@ global function SinAtom(atom a)
 end function
 
 global function TanAtom(atom a)
-  return DivAtom(SinAtom(a), CosAtom(a))
+  atom r
+  r = DivAtom(SinAtom(a), CosAtom(a))
+  return r
 end function
 
 -- arc functions
@@ -258,6 +268,9 @@ end function
 
 -- other trig functions
 
+-- Cosh
+-- Sinh
+-- Tanh
 -- ArcCosh
 -- ArcCot
 -- ArcCoth
@@ -266,17 +279,35 @@ end function
 -- ArcSec
 -- ArcSech
 -- ArcSinh
--- ArcTan2
 -- ArcTanh
--- Cosh
 -- Cot
 -- Coth
 -- Csc
 -- Csch
 -- Sec
 -- Sech
--- Sinh
--- Tanh
+
+global function CoshAtom(atom a)
+-- cosh(x) = (e^(x) + e^(-x)) / 2
+    atom r
+    r = DivAtom(ExpAtom(a) + ExpAtom(-a), 2)
+    return r
+end function
+
+global function SinhAtom(atom a)
+-- sinh(x) = (e^(x) - e^(-x)) / 2
+    atom r
+    r = DivAtom(ExpAtom(a) - EunExp(-a), 2)
+    return r
+end function
+
+global function TanhAtom(atom a)
+-- tanh(x) = e^(2*x) => a; (a - 1) / (a + 1)
+    atom r
+    r = ExpAtom(a * 2)
+    r = DivAtom(r - 1, r + 1)
+    return r
+end function
 
 global function ArcCoshAtom(atom a)
 -- arccosh(x) = x >= 1; ln(x + sqrt(x^2 - 1))
@@ -336,55 +367,78 @@ global function ArcSecAtom(atom a)
 end function
 
 global function ArcSechAtom(atom a)
-  return 
+-- arcsech(x) = 0 < x <= 1; 1 / x => a; ln(a + sqrt(a^2 - 1)) :: ln((1 + sqrt(1 - x^2)) / x)
+    atom r
+    if a <= 0 or a > 1 then
+        abort(1)
+    end if
+    r = MultInvAtom(a)
+    r = LnAtom(r + SqrtAtom(r * r - 1))
+    return r
 end function
 
 global function ArcSinhAtom(atom a)
-  return 
-end function
-
-global function ArcTan2Atom(atom a, atom b)
-  return 
+-- arcsinh(x) = ln(x + sqrt(x^2 + 1))
+    atom r
+    r = SqrtAtom(a * a + 1)
+    r = LnAtom(a + r)
+    return r
 end function
 
 global function ArcTanhAtom(atom a)
-  return 
-end function
-
-global function CoshAtom(atom a)
-  return 
+-- arctanh(x) = abs(x) < 1; ln((1 + x)/(1 - x)) / 2
+    atom r
+    if abs(a) >= 1 then
+        abort(1)
+    end if
+    r = DivAtom(a + 1, 1 - a)
+    r = DivAtom(LnAtom(r), 2)
+    return r
 end function
 
 global function CotAtom(atom a)
-  return 
+  atom r
+  r = MultInvAtom(TanAtom(a))
+  return r
 end function
 
 global function CothAtom(atom a)
-  return 
+-- coth(x) = x != 0; 1 / tanh(x)
+    atom r
+    if a = 0 then
+        abort(1)
+    end if
+    r = MultInvAtom(TanhAtom(a))
+    return r
 end function
 
 global function CscAtom(atom a)
-  return 
+    atom r
+    r = MultInvAtom(SinAtom(a))
+    return r
 end function
 
 global function CschAtom(atom a)
-  return 
+-- csch(x) = x != 0; 1 / sinh(x)
+    atom r
+    if a = 0 then
+        abort(1)
+    end if
+    r = MultInvAtom(SinhAtom(a))
+    return r
 end function
 
 global function SecAtom(atom a)
-  return 
+    atom r
+    r = MultInvAtom(CosAtom(a))
+    return r
 end function
 
 global function SechAtom(atom a)
-  return 
+-- sech(x) = 1 / cosh(x)
+    atom r
+    r = MultInvAtom(CoshAtom(a))
+    return r
 end function
 
-global function SinhAtom(atom a)
-  return 
-end function
-
-global function TanhAtom(atom a)
-  return 
-end function
-
--- more functions to come.
+-- end of file.
