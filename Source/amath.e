@@ -15,7 +15,7 @@ elsedef
 constant accuracy = power(2, 53) -- question
 end ifdef
 
-global constant AMATH_ITERS = 10000
+global constant AMATH_ITERS = 1000000
 
 global function MultInvAtom(atom x)
 -- performs 1/x
