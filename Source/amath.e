@@ -174,7 +174,7 @@ global function CosAtom(atom a)
   return r
 end function
 
-global function SineAtom(atom a)
+global function SinAtom(atom a)
 -- sine(x) = x - ((x^3)/(3!)) + ((x^5)/(5!)) - ((x^7)/(7!)) + ((x^9)/(9!)) - ...
   atom f, r, d, c, x
   integer i
