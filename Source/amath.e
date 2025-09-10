@@ -3,6 +3,7 @@
 -- Description: Accurate math routines, using Newton's method.
 -- Author: James Cook (jmsck55 AT gmail DOT com)
 
+-- Routines for atoms and objects.
 
 include std/math.e
 
@@ -41,29 +42,62 @@ global function MultInvAtom(atom x)
   return g
 end function
 
-global function DivAtom(atom n, atom d)
-  atom r
+global function MultInv(object x)
+    if atom(x) then
+        return MultInvAtom(x)
+    end if
+    for i = 1 to length(x) do
+        x[i] = MultInv(x[i])
+    end for
+    return x
+end function
+
+global function DivAtom(object n, atom d)
   if d = 2 then
     return n / 2
   end if
-  r = MultInvAtom(d) * n
-  return r
+  n *= MultInvAtom(d)
+  return n
 end function
 
-global function NthRootAtom(atom x, integer n)
-  atom quotient, average, guess
+global function Div(object n, object d)
+  sequence s
+  if atom(d) then
+    return DivAtom(n, d)
+  end if
+  s = repeat(0, length(d))
+  for i = 1 to length(d) do
+    s[i] = Div(n, d[i])
+  end for
+  return s
+end function
+
+global function NthRoot(object x, integer n)
+  object quotient, average, guess
   guess = power(x, MultInvAtom(n))
-  quotient = DivAtom(x, power(guess, n-1))
-  average = DivAtom(quotient + ((n-1) * guess)), n)
+  quotient = Div(x, power(guess, n-1))
+  average = Div(quotient + ((n-1) * guess)), n)
   return average
 end function
 
+global function NthRootAtom(atom x, integer n)
+  return NthRoot(x, n)
+end function
+
+global function Sqrt(object x)
+  return NthRoot(x, 2)
+end function
+
 global function SqrtAtom(atom x)
-  return NthRootAtom(x, 2)
+  return Sqrt(x)
+end function
+
+global function Cbrt(object x)
+  return NthRoot(x, 3)
 end function
 
 global function CbrtAtom(atom x)
-  return NthRootAtom(x, 3)
+  return Cbrt(x)
 end function
 
 global function ExpAtom(atom x)
@@ -88,6 +122,18 @@ global function ExpAtom(atom x)
     last = sum
   end for
   return sum
+end function
+
+global function Exp(object x)
+  sequence s
+  if atom(x) then
+    return ExpAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Exp(x[i])
+  end for
+  return s
 end function
 
 -- Raw function: Natural Logarithm
@@ -152,6 +198,18 @@ global function LnAtom(atom a)
     return f - (sum)
 end function
 
+global function Ln(object x)
+  sequence s
+  if atom(x) then
+    return LnAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Ln(x[i])
+  end for
+  return s
+end function
+
 -- Trig functions
 
 -- cos
@@ -185,6 +243,18 @@ global function CosAtom(atom a)
   return r
 end function
 
+global function Cos(object x)
+  sequence s
+  if atom(x) then
+    return CosAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Cos(x[i])
+  end for
+  return s
+end function
+
 global function SinAtom(atom a)
 -- sine(x) = x - ((x^3)/(3!)) + ((x^5)/(5!)) - ((x^7)/(7!)) + ((x^9)/(9!)) - ...
   atom f, r, d, c, x
@@ -209,10 +279,34 @@ global function SinAtom(atom a)
   return r
 end function
 
+global function Sin(object x)
+  sequence s
+  if atom(x) then
+    return SinAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Sin(x[i])
+  end for
+  return s
+end function
+
 global function TanAtom(atom a)
   atom r
   r = DivAtom(SinAtom(a), CosAtom(a))
   return r
+end function
+
+global function Tan(object x)
+  sequence s
+  if atom(x) then
+    return TanAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Tan(x[i])
+  end for
+  return s
 end function
 
 -- arc functions
@@ -247,6 +341,18 @@ end function
 
 global constant ACONST_PI = ArcTanAtom(1) * 4
 
+global function ArcTan(object x)
+  sequence s
+  if atom(x) then
+    return ArcTanAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcTan(x[i])
+  end for
+  return s
+end function
+
 global function ArcSinAtom(atom a)
 -- arcsin(x) = arctan( x / sqrt(1 - x^2) )
   atom r
@@ -254,6 +360,18 @@ global function ArcSinAtom(atom a)
   r = DivAtom(a, r)
   r = ArcTanAtom(r)
   return r
+end function
+
+global function ArcSin(object x)
+  sequence s
+  if atom(x) then
+    return ArcSinAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcSin(x[i])
+  end for
+  return s
 end function
 
 global function ArcCosAtom(atom a)
@@ -267,6 +385,18 @@ global function ArcCosAtom(atom a)
   r = DivAtom(r, a)
   r = ArcTanAtom(r)
   return r
+end function
+
+global function ArcCos(object x)
+  sequence s
+  if atom(x) then
+    return ArcCosAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcCos(x[i])
+  end for
+  return s
 end function
 
 -- other trig functions
@@ -297,11 +427,35 @@ global function CoshAtom(atom a)
     return r
 end function
 
+global function Cosh(object x)
+  sequence s
+  if atom(x) then
+    return CoshAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Cosh(x[i])
+  end for
+  return s
+end function
+
 global function SinhAtom(atom a)
 -- sinh(x) = (e^(x) - e^(-x)) / 2
     atom r
     r = DivAtom(ExpAtom(a) - EunExp(-a), 2)
     return r
+end function
+
+global function Sinh(object x)
+  sequence s
+  if atom(x) then
+    return SinhAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Sinh(x[i])
+  end for
+  return s
 end function
 
 global function TanhAtom(atom a)
@@ -310,6 +464,18 @@ global function TanhAtom(atom a)
     r = ExpAtom(a * 2)
     r = DivAtom(r - 1, r + 1)
     return r
+end function
+
+global function Tanh(object x)
+  sequence s
+  if atom(x) then
+    return TanhAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Tanh(x[i])
+  end for
+  return s
 end function
 
 global function ArcCoshAtom(atom a)
@@ -321,6 +487,18 @@ global function ArcCoshAtom(atom a)
   r = SqrtAtom(a * a - 1)
   r = LnAtom(a + r)
   return r
+end function
+
+global function ArcCosh(object x)
+  sequence s
+  if atom(x) then
+    return ArcCoshAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcCosh(x[i])
+  end for
+  return s
 end function
 
 global function ArcCotAtom(atom a)
@@ -335,6 +513,18 @@ global function ArcCotAtom(atom a)
     return r
 end function
 
+global function ArcCot(object x)
+  sequence s
+  if atom(x) then
+    return ArcCotAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcCot(x[i])
+  end for
+  return s
+end function
+
 global function ArcCothAtom(atom a)
 -- arccoth(x) = abs(x) > 1; ln((x + 1)/(x - 1)) / 2
     atom r
@@ -346,10 +536,34 @@ global function ArcCothAtom(atom a)
     return r
 end function
 
+global function ArcCoth(object x)
+  sequence s
+  if atom(x) then
+    return ArcCothAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcCoth(x[i])
+  end for
+  return s
+end function
+
 global function ArcCscAtom(atom a)
   atom r
   r = ArcSinAtom(MultInvAtom(a))
   return r
+end function
+
+global function ArcCsc(object x)
+  sequence s
+  if atom(x) then
+    return ArcCscAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcCsc(x[i])
+  end for
+  return s
 end function
 
 global function ArcCschAtom(atom a)
@@ -363,10 +577,34 @@ global function ArcCschAtom(atom a)
     return r
 end function
 
+global function ArcCsch(object x)
+  sequence s
+  if atom(x) then
+    return ArcCschAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcCsch(x[i])
+  end for
+  return s
+end function
+
 global function ArcSecAtom(atom a)
     atom r
     r = ArcCosAtom(MultInvAtom(a))
     return r
+end function
+
+global function ArcSec(object x)
+  sequence s
+  if atom(x) then
+    return ArcSecAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcSec(x[i])
+  end for
+  return s
 end function
 
 global function ArcSechAtom(atom a)
@@ -380,12 +618,36 @@ global function ArcSechAtom(atom a)
     return r
 end function
 
+global function ArcSech(object x)
+  sequence s
+  if atom(x) then
+    return ArcSechAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcSech(x[i])
+  end for
+  return s
+end function
+
 global function ArcSinhAtom(atom a)
 -- arcsinh(x) = ln(x + sqrt(x^2 + 1))
     atom r
     r = SqrtAtom(a * a + 1)
     r = LnAtom(a + r)
     return r
+end function
+
+global function ArcSinh(object x)
+  sequence s
+  if atom(x) then
+    return ArcSinhAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcSinh(x[i])
+  end for
+  return s
 end function
 
 global function ArcTanhAtom(atom a)
@@ -399,10 +661,34 @@ global function ArcTanhAtom(atom a)
     return r
 end function
 
+global function ArcTanh(object x)
+  sequence s
+  if atom(x) then
+    return ArTanhAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = ArcTanh(x[i])
+  end for
+  return s
+end function
+
 global function CotAtom(atom a)
   atom r
   r = MultInvAtom(TanAtom(a))
   return r
+end function
+
+global function Cot(object x)
+  sequence s
+  if atom(x) then
+    return CotAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Cot(x[i])
+  end for
+  return s
 end function
 
 global function CothAtom(atom a)
@@ -415,10 +701,34 @@ global function CothAtom(atom a)
     return r
 end function
 
+global function Coth(object x)
+  sequence s
+  if atom(x) then
+    return CothAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Coth(x[i])
+  end for
+  return s
+end function
+
 global function CscAtom(atom a)
     atom r
     r = MultInvAtom(SinAtom(a))
     return r
+end function
+
+global function Csc(object x)
+  sequence s
+  if atom(x) then
+    return CscAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Csc(x[i])
+  end for
+  return s
 end function
 
 global function CschAtom(atom a)
@@ -431,10 +741,34 @@ global function CschAtom(atom a)
     return r
 end function
 
+global function Csch(object x)
+  sequence s
+  if atom(x) then
+    return CschAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Csch(x[i])
+  end for
+  return s
+end function
+
 global function SecAtom(atom a)
     atom r
     r = MultInvAtom(CosAtom(a))
     return r
+end function
+
+global function Sec(object x)
+  sequence s
+  if atom(x) then
+    return SecAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Sec(x[i])
+  end for
+  return s
 end function
 
 global function SechAtom(atom a)
@@ -442,6 +776,18 @@ global function SechAtom(atom a)
     atom r
     r = MultInvAtom(CoshAtom(a))
     return r
+end function
+
+global function Sech(object x)
+  sequence s
+  if atom(x) then
+    return SechAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = Sech(x[i])
+  end for
+  return s
 end function
 
 -- end of file.
