@@ -528,7 +528,7 @@ end function
 global function CoshAtom(atom a)
 -- cosh(x) = (e^(x) + e^(-x)) / 2
     atom r
-    r = DivAtom(ExpAtom(a) + ExpAtom(-a), 2)
+    r = (ExpAtom(a) + ExpAtom(-a)) / 2
     return r
 end function
 
@@ -547,7 +547,7 @@ end function
 global function SinhAtom(atom a)
 -- sinh(x) = (e^(x) - e^(-x)) / 2
     atom r
-    r = DivAtom(ExpAtom(a) - EunExp(-a), 2)
+    r = (ExpAtom(a) - EunExp(-a)) / 2
     return r
 end function
 
@@ -609,7 +609,7 @@ end function
 global function ArcCotAtom(atom a)
     atom r
     if a = 0 then
-        return DivAtom(ACONST_PI, 2)
+        return ACONST_PI / 2
     end if
     r = ArcTanAtom(MultInvAtom(a))
     if a < 0 then
@@ -637,7 +637,7 @@ global function ArcCothAtom(atom a)
         abort(1)
     end if
     r = DivAtom(a + 1, a - 1)
-    r = DivAtom(LnAtom(r), 2)
+    r = LnAtom(r) / 2
     return r
 end function
 
@@ -762,7 +762,7 @@ global function ArcTanhAtom(atom a)
         abort(1)
     end if
     r = DivAtom(a + 1, 1 - a)
-    r = DivAtom(LnAtom(r), 2)
+    r = LnAtom(r) / 2
     return r
 end function
 
