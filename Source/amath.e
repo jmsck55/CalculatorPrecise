@@ -43,6 +43,9 @@ end function
 
 global function DivAtom(atom n, atom d)
   atom r
+  if d = 2 then
+    return n / 2
+  end if
   r = MultInvAtom(d) * n
   return r
 end function
