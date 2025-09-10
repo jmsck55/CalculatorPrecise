@@ -212,6 +212,37 @@ global function Ln(object x)
   return s
 end function
 
+global function PowerAtom(atom base, atom raisedTo)
+-- b^x = e^(x * ln(b))
+    atom r
+    r = ExpAtom(LnAtom(base) * raisedTo)
+    return r
+end function
+
+global function Power(object x, object y)
+  sequence s
+  if atom(x) and atom(y) then
+    return PowerAtom(x, y)
+  end if
+  s = Exp(Ln(x) * y)
+  return s
+end function
+
+global function GeneralRootAtom(atom rooted, atom anyNumber)
+    atom r
+    r = PowerAtom(rooted, MultInvAtom(anyNumber))
+    return r
+end function
+
+global function GeneralRoot(object x, object y)
+  sequence s
+  if atom(x) and atom(y) then
+    return GeneralRootAtom(x, y)
+  end if
+  s = Power(x, MultInv(y))
+  return s
+end function
+
 -- Trig functions
 
 -- cos
