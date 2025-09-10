@@ -7,6 +7,11 @@
 
 include std/math.e
 
+-- global function Round(object a, object precision = 1)
+--  NOTE: use round() from std/math.e instead of this function.
+--    return floor(0.5 + (a * precision )) / precision
+-- end function
+
 global integer AMATH_DEBUG
 AMATH_DEBUG = 0
 
