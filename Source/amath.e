@@ -890,4 +890,36 @@ global function Sech(object x)
   return s
 end function
 
+global function RadiansToDegreesAtom(atom r)
+    return DivAtom(r, (ACONST_PI / 2)) * 90
+end function
+
+global function RadiansToDegrees(object x)
+  sequence s
+  if atom(x) then
+    return RadiansToDegreesAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = RadiansToDegrees(x[i])
+  end for
+  return s
+end function
+
+global function DegreesToRadiansAtom(atom d)
+    return DivAtom(d, 90) * (ACONST_PI / 2)
+end function
+
+global function DegreesToRadians(object x)
+  sequence s
+  if atom(x) then
+    return DegreesToRadiansAtom(x)
+  end if
+  s = repeat(0, length(x))
+  for i = 1 to length(x) do
+    s[i] = DegreesToRadians(x[i])
+  end for
+  return s
+end function
+
 -- end of file.
