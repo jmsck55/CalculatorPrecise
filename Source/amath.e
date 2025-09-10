@@ -89,6 +89,8 @@ end function
 
 -- Raw function: Natural Logarithm
 
+global constant ACONST_E = NaturalExponentiationAtom(1)
+
 global function NaturalLogarithmAtom(atom a)
     -- Function: NaturalLogarithm()
     -- Use for testing the method.
@@ -117,11 +119,20 @@ global function NaturalLogarithmAtom(atom a)
     -- end while
     -- return - (sum)
     atom x, p, sum, last
+    integer f
     if a <= 0 then
       abort(1)
     elsif a >= 2 then
-      // factor.
-      return {} -- to do later.
+      -- factor, first find n, then calculate e^n
+      -- log(m/e^n) + n = log(m)
+      if a > ACONST_E then
+        f = floor(log(a))
+      else
+        f = 1
+      end if
+      a = DivAtom(a, power(ACONST_E, f))
+    else
+      f = 0
     end if
     x = 1 - a
     last = 0
@@ -135,7 +146,7 @@ global function NaturalLogarithmAtom(atom a)
       end if
       last = sum
     end for
-    return - (sum)
+    return f - (sum)
 end function
 
 -- more functions to come.
