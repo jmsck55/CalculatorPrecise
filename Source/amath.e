@@ -5,6 +5,11 @@
 
 -- Routines for atoms and objects.
 
+ifdef BITS64 then
+puts(1, "Fatal warning: 64-bit Euphoria was not designed for accurate calculations, please use 32-bit Euphoria instead.\n")
+abort(1)
+end ifdef
+
 include std/math.e
 include std/convert.e
 
