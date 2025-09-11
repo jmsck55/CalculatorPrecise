@@ -21,33 +21,13 @@ include std/convert.e
 global integer AMATH_DEBUG
 AMATH_DEBUG = 0
 
-ifdef BITS64 then
-constant accuracy ≈ power(2, 64) -- question
-elsedef
-constant accuracy = power(2, 53) -- question
-end ifdef
-
-global function atom_to_float(atom a)
-ifdef BITS64 then
-    return atom_to_float80(a)
-elsedef
-    return atom_to_float64(a)
-end ifdef
-end function
-
-global function float_to_atom(sequence s)
-ifdef BITS64 then
-    return float80_to_atom(s)
-elsedef
-    return float64_to_atom(s)
-end ifdef
-end function
+constant accuracy = power(2, 52) -- question
 
 global function adjust_atom(atom a)
     sequence s
-    s = atom_to_float(a)
+    s = atom_to_float64(a)
     s[1] = and_bits(s[1], #FE) -- adjust least significant bit
-    return float_to_atom(s)
+    return float64_to_atom(s)
 end function
 
 global constant AMATH_ITERS = 1000000
