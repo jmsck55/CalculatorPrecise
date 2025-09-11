@@ -24,6 +24,12 @@ AMATH_DEBUG = 0
 constant accuracy = power(2, 52) -- question
 
 global function adjust_atom(atom a)
+-- Euphoria 32-bit uses doubles (64-bit floating point numbers) for its atoms.
+-- long doubles store doubles in memory during calculations, but are not accurate up to 80-bits like they can hold.
+-- They still only hold up to 64-bits worth of accuracy during calculations, which is why I still use doubles and
+-- 32-bit Euphoria instead of long doubles in 64-bit Euphoria.
+-- Maybe one day, I'll make a type and related functions for 64-bit Euphoria to use doubles for calculating, but that
+-- would require casting it down to double format and storing it in memory, for another day.
     sequence s
     s = atom_to_float64(a)
     s[1] = and_bits(s[1], #FE) -- adjust least significant bit
