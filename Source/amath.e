@@ -6,6 +6,7 @@
 -- Routines for atoms and objects.
 
 include std/math.e
+include std/convert.e
 
 -- global function Round(object a, object precision = 1)
 --  NOTE: use round() from std/math.e instead of this function.
@@ -21,11 +22,35 @@ elsedef
 constant accuracy = power(2, 53) -- question
 end ifdef
 
+global function atom_to_float(atom a)
+ifdef BITS64 then
+    return atom_to_float80(a)
+elsedef
+    return atom_to_float64(a)
+end ifdef
+end function
+
+global function float_to_atom(sequence s)
+ifdef BITS64 then
+    return float80_to_atom(s)
+elsedef
+    return float64_to_atom(s)
+end ifdef
+end function
+
+global function adjust_atom(atom a)
+    sequence s
+    s = atom_to_float(a)
+    s[1] = and_bits(s[1], #FE) -- adjust least significant bit
+    return float_to_atom(s)
+end function
+
 global constant AMATH_ITERS = 1000000
 
 global function MultInvAtom(atom x)
 -- performs 1/x
   atom t, g, last
+  sequence a, b
   g = 1 / x
   last = 0
   for i = 1 to AMATH_ITERS do
@@ -41,10 +66,10 @@ global function MultInvAtom(atom x)
     if t = last then
       exit
     end if
-    g *= ( 2 - t )
     last = t
+    g *= ( 2 - t )
   end for
-  return g
+  return adjust_atom(g)
 end function
 
 global function MultInv(object x)
@@ -128,7 +153,7 @@ global function ExpAtom(atom x)
     end if
     last = sum
   end for
-  return sum
+  return adjust_atom(sum)
 end function
 
 global function Exp(object x)
@@ -202,7 +227,8 @@ global function LnAtom(atom a)
       end if
       last = sum
     end for
-    return f - (sum)
+    sum = f - (sum)
+    return adjust_atom(sum)
 end function
 
 global function Ln(object x)
@@ -278,7 +304,7 @@ global function CosAtom(atom a)
     x *= a
     d *= (-1)
   end for
-  return r
+  return adjust_atom(r)
 end function
 
 global function Cos(object x)
@@ -314,7 +340,7 @@ global function SinAtom(atom a)
     x *= a
     d *= (-1)
   end for
-  return r
+  return adjust_atom(r)
 end function
 
 global function Sin(object x)
@@ -374,7 +400,7 @@ global function ArcTanAtom(atom a)
     end if
   end for
   r = DivAtom(a, b) * s
-  return r
+  return adjust_atom(r)
 end function
 
 global constant ACONST_PI = ArcTanAtom(1) * 4
