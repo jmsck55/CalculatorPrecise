@@ -18,12 +18,15 @@ atom b
 integer f
 sequence s
 s = atom_to_float64(a)
-b = s[$]
+b = and_bits(s[$], #7f)
 for i = length(s) - 1 to 1 by -1 do
   b *= #100
   b = or_bits(b, s[i])
 end for
 f = floor(b / 2)
+if a < 0 then
+  f = -(f)
+end if
 return f
 elsedef
 return a
@@ -31,12 +34,15 @@ end ifdef
 end function
 
 function decode(atom f)
+integer sign = 1
 ifdef BITS64 then
-f *= 2
-return float64_to_atom(int_to_bytes(f, 8))
-elsedef
-return f
+if f < 0 then
+  sign = -1
+  f = -(f)
+end if
+f = float64_to_atom(int_to_bytes(f * 2, 8)) * sign
 end ifdef
+return f
 end function
 
 public function format(atom a)
