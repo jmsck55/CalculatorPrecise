@@ -77,7 +77,7 @@ end function
 
 global function DivAtom(object n, atom d)
   if d = 2 then
-    return n / 2
+    return adjust_atom(n / 2)
   end if
   n *= MultInvAtom(d)
   return n
@@ -439,9 +439,9 @@ global function ArcTan2Atom(atom y, atom x)
         end if
         tmp = ACONST_PI / 2 -- half PI.
         if y > 0 then -- y > 0
-            return tmp
+            return adjust_atom(tmp)
         elsif y < 0 then -- y < 0
-            return -(tmp) -- negated tmp
+            return adjust_atom(-(tmp)) -- negated tmp
         end if
     end if
     tmp = ArcTanAtom(DivAtom(y, x))
@@ -449,9 +449,9 @@ global function ArcTan2Atom(atom y, atom x)
         return tmp
     end if
     if y < 0 then -- y < 0
-        return tmp - ACONST_PI
+        return adjust_atom(tmp - ACONST_PI)
     end if
-    return tmp + ACONST_PI
+    return adjust_atom(tmp + ACONST_PI)
 end function
 
 global function ArcTan2(object y, object x)
@@ -546,7 +546,7 @@ global function CoshAtom(atom a)
 -- cosh(x) = (e^(x) + e^(-x)) / 2
     atom r
     r = (ExpAtom(a) + ExpAtom(-a)) / 2
-    return r
+    return adjust_atom(r)
 end function
 
 global function Cosh(object x)
@@ -565,7 +565,7 @@ global function SinhAtom(atom a)
 -- sinh(x) = (e^(x) - e^(-x)) / 2
     atom r
     r = (ExpAtom(a) - EunExp(-a)) / 2
-    return r
+    return adjust_atom(r)
 end function
 
 global function Sinh(object x)
@@ -626,11 +626,12 @@ end function
 global function ArcCotAtom(atom a)
     atom r
     if a = 0 then
-        return ACONST_PI / 2
+        return adjust_atom(ACONST_PI / 2)
     end if
     r = ArcTanAtom(MultInvAtom(a))
     if a < 0 then
         r += ACONST_PI
+        return adjust_atom(r)
     end if
     return r
 end function
@@ -655,7 +656,7 @@ global function ArcCothAtom(atom a)
     end if
     r = DivAtom(a + 1, a - 1)
     r = LnAtom(r) / 2
-    return r
+    return adjust_atom(r)
 end function
 
 global function ArcCoth(object x)
@@ -780,7 +781,7 @@ global function ArcTanhAtom(atom a)
     end if
     r = DivAtom(a + 1, 1 - a)
     r = LnAtom(r) / 2
-    return r
+    return adjust_atom(r)
 end function
 
 global function ArcTanh(object x)
@@ -915,7 +916,7 @@ end function
 global function RadiansToDegreesAtom(atom r)
     atom d
     d = DivAtom(r, (ACONST_PI / 2)) * 90
-    return d
+    return adjust_atom(d)
 end function
 
 global function RadiansToDegrees(object x)
@@ -933,7 +934,7 @@ end function
 global function DegreesToRadiansAtom(atom d)
     atom r
     r = DivAtom(d, 90) * (ACONST_PI / 2)
-    return r
+    return adjust_atom(r)
 end function
 
 global function DegreesToRadians(object x)
