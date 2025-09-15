@@ -913,7 +913,9 @@ global function Sech(object x)
 end function
 
 global function RadiansToDegreesAtom(atom r)
-    return DivAtom(r, (ACONST_PI / 2)) * 90
+    atom d
+    d = DivAtom(r, (ACONST_PI / 2)) * 90
+    return d
 end function
 
 global function RadiansToDegrees(object x)
@@ -929,7 +931,9 @@ global function RadiansToDegrees(object x)
 end function
 
 global function DegreesToRadiansAtom(atom d)
-    return DivAtom(d, 90) * (ACONST_PI / 2)
+    atom r
+    r = DivAtom(d, 90) * (ACONST_PI / 2)
+    return r
 end function
 
 global function DegreesToRadians(object x)
