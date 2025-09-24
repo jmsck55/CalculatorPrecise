@@ -11,6 +11,19 @@
 
 #define BMATH_ITERS 1000000
 
+double adjust(long double g)
+{
+  double b = (double)g;
+  long double c = (long double)b;
+  if (c > g)
+  {
+    g *= 2;
+    g -= c;
+    b = (double)g;
+  }
+  return b;
+}
+
 double MultInvl(long double x)
 {
 // performs 1/x
@@ -29,7 +42,7 @@ double MultInvl(long double x)
       break;
     }
   }
-  return (double)g;
+  return adjust(g);
 }
 
 double Divl(long double n, long double d)
@@ -38,7 +51,7 @@ double Divl(long double n, long double d)
     return (double)(n >> 1);
   }
   n *= (long double)MultInvl(d);
-  return (double)n;
+  return adjust(n);
 }
 
 double Round(double a, double precision = 1)
