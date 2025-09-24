@@ -52,7 +52,7 @@ double Divl(long double n, long double d)
     return (double)(n >> 1);
   }
   n *= (long double)MultInvl(d);
-  return adjust(n);
+  return (double)n;
 }
 
 double Round(double a, double precision = 1)
