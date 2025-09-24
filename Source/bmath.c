@@ -5,6 +5,7 @@
 
 // Routines for doubles using long doubles as intermediaries.
 
+// Uses C99 version of math.h
 #include <math.h>
 
 // constant accuracy = power(2, 52) -- question
@@ -15,7 +16,7 @@ double adjust(long double g)
 {
   double b = (double)g;
   long double c = (long double)b;
-  if (c > g)
+  if (fasbl(c) > fasbl(g))
   {
     g <<= 1; // g *= 2;
     g -= c;
