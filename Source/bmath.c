@@ -16,7 +16,7 @@ double adjust(long double g)
 {
   double b = (double)g;
   long double c = (long double)b;
-  if (fasbl(c) > fasbl(g))
+  if (c > g) // round down. // if (fasbl(c) > fasbl(g)) // round to zero.
   {
     g <<= 1; // g *= 2;
     g -= c;
