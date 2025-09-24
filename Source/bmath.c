@@ -17,7 +17,7 @@ double adjust(long double g)
   long double c = (long double)b;
   if (c > g)
   {
-    g *= 2;
+    g <<= 1; // g *= 2;
     g -= c;
     b = (double)g;
   }
