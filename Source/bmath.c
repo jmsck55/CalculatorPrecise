@@ -64,15 +64,17 @@ double Round(double a, double precision = 1)
     return = Divl(b, (long double)precision);
 }
 
-/*
 
-global function NthRoot(object x, integer n)
-  object quotient, average, guess
-  guess = power(x, MultInvAtom(n))
-  quotient = Div(x, power(guess, n-1))
-  average = Div(quotient + ((n-1) * guess)), n)
-  return average
-end function
+double NthRoot(double x, unsigned int n)
+{
+  double quotient, average, guess;
+  guess = powerl((long double)x, (long double)MultInvl((long double)n));
+  quotient = Divl((long double)x, powerl((long double)guess, (long double)(n-1)));
+  average = Divl(((long double)quotient) + ((long double)(n-1) * (long double)guess)), (long double)n);
+  return average;
+}
+
+/*
 
 global function NthRootAtom(atom x, integer n)
   return NthRoot(x, n)
