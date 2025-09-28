@@ -48,6 +48,12 @@ double MultInvl(long double x)
 
 double Divl(long double n, long double d)
 {
+  if (n == 0.0L) {
+    return 0.0;
+  }
+  if (d == 1.0L) {
+    return adjust(n);
+  }
   if (d == 2.0L) {
     return (double)(n >> 1);
   }
