@@ -80,27 +80,18 @@ double NthRoot(double x, unsigned int n)
   return average;
 }
 
+
+double Sqrt(double x)
+{
+  return NthRoot(x, 2);
+}
+
+double Cbrt(double x)
+{
+  return NthRoot(x, 3);
+}
+
 /*
-
-global function NthRootAtom(atom x, integer n)
-  return NthRoot(x, n)
-end function
-
-global function Sqrt(object x)
-  return NthRoot(x, 2)
-end function
-
-global function SqrtAtom(atom x)
-  return Sqrt(x)
-end function
-
-global function Cbrt(object x)
-  return NthRoot(x, 3)
-end function
-
-global function CbrtAtom(atom x)
-  return Cbrt(x)
-end function
 
 global function ExpAtom(atom x)
 -- using taylor series
