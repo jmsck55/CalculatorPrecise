@@ -91,44 +91,36 @@ double Cbrt(double x)
   return NthRoot(x, 3);
 }
 
+
+double Exp(double x)
+{
+// using taylor series
+// https://en.wikipedia.org/wiki/TaylorSeries
+//
+//  exp(1) = sum of k=0 to inf (1/k!);
+//  exp(x) = sum of k=0 to inf ((x^k)/k!);
+//
+  double sum, num, den, last;
+  num = 1.0;
+  den = 1.0;
+  sum = 1.0;
+  last = 0.0;
+  for (int i = 1; i <= 1000000000; i++)
+  {
+    num *= x;
+    den *= i; // number of iterations
+    sum += Divl((long double)num, (long double)den);
+    if (sum == last)
+    {
+      break;
+    }
+    last = sum;
+  }
+  return sum;
+}
+
+
 /*
-
-global function ExpAtom(atom x)
--- using taylor series
--- https://en.wikipedia.org/wiki/TaylorSeries
---
--- -- exp(1) = sum of k=0 to inf (1/k!)
--- -- exp(x) = sum of k=0 to inf ((x^k)/k!)
---
-  atom sum, num, den, last
-  num = 1
-  den = 1
-  sum = 1
-  last = 0
-  for i = 1 to 1000000000 do
-    num *= x
-    den *= i -- number of iterations
-    sum += DivAtom(num, den)
-    if sum = last then
-      exit
-    end if
-    last = sum
-  end for
-  return adjust_atom(sum)
-end function
-
-global function Exp(object x)
-  sequence s
-  if atom(x) then
-    return ExpAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Exp(x[i])
-  end for
-  return s
-end function
-
 -- Raw function: Natural Logarithm
 
 global constant ACONST_E = ExpAtom(1)
