@@ -209,86 +209,70 @@ double GeneralRoot(double rooted, double nyNumber)
     return r;
 }
 
--- Trig functions
+// Trig functions
 
--- cos
--- sin
--- tan
--- arctan
--- arccos
--- arcsin
--- ACONST_PI
+// cos
+// sin
+// tan
+// arctan
+// arccos
+// arcsin
+// ACONST_PI
 
-global function CosAtom(atom a)
--- cos(x) = 1 - ((x^2)/(2!)) + ((x^4)/(4!)) - ((x^6)/(6!)) + ((x^8)/(8!)) - ...
-  atom f, r, d, c, x
-  f = 1
-  r = 1
-  d = -1
-  c = 0
-  x = a
-  for i = 2 to 1000000000 by 2 do
-    f *= i
-    x *= a
-    r += (d * DivAtom(x, f))
-    if r = c then
-      exit
-    end if
-    c = r
-    f *= (i + 1)
-    x *= a
-    d *= (-1)
-  end for
-  return adjust_atom(r)
-end function
+double Cos(double a)
+{
+// cos(x) = 1 - ((x^2)/(2!)) + ((x^4)/(4!)) - ((x^6)/(6!)) + ((x^8)/(8!)) - ...
+  double f, r, d, c, x;
+  f = 1.0;
+  r = 1.0;
+  d = -1.0;
+  c = 0.0;
+  x = a;
+  for (int i = 2; i <= 1000000000; i++)
+  {
+    f *= i;
+    x *= a;
+    r += (d * Divl((long double)x, (long double)f));
+    if (r == c)
+    {
+      break;
+    }
+    c = r;
+    i++; // i, increment by 2, each loop
+    f *= i; // (i + 1)
+    x *= a;
+    d *= (-1.0);
+  }
+  return r;
+}
 
-global function Cos(object x)
-  sequence s
-  if atom(x) then
-    return CosAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Cos(x[i])
-  end for
-  return s
-end function
+double Sin(double a)
+{
+// sine(x) = x - ((x^3)/(3!)) + ((x^5)/(5!)) - ((x^7)/(7!)) + ((x^9)/(9!)) - ...
+  double f, r, d, c, x;
+  f = 2.0;
+  r = a;
+  d = -1.0;
+  c = 0.0;
+  x = a * a;
+  for (int i = 3; i <= 1000000001; i++)
+  {
+    f *= i;
+    x *= a;
+    r += (d * Divl((long double)x, (long double)f));
+    if (r == c)
+    {
+      break;
+    }
+    c = r;
+    i++; // by 2
+    f *= i; // (i + 1)
+    x *= a;
+    d *= (-1.0);
+  }
+  return r;
+}
 
-global function SinAtom(atom a)
--- sine(x) = x - ((x^3)/(3!)) + ((x^5)/(5!)) - ((x^7)/(7!)) + ((x^9)/(9!)) - ...
-  atom f, r, d, c, x
-  integer i
-  f = 2
-  r = a
-  d = -1
-  c = 0
-  x = a * a
-  for i = 3 to 1000000001 by 2 do
-    f *= i
-    x *= a
-    r += (d * DivAtom(x, f))
-    if r = c then
-      exit
-    end if
-    c = r
-    f *= (i + 1)
-    x *= a
-    d *= (-1)
-  end for
-  return adjust_atom(r)
-end function
-
-global function Sin(object x)
-  sequence s
-  if atom(x) then
-    return SinAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Sin(x[i])
-  end for
-  return s
-end function
 
 global function TanAtom(atom a)
   atom r
