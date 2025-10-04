@@ -562,7 +562,7 @@ end function
 global function SinhAtom(atom a)
 -- sinh(x) = (e^(x) - e^(-x)) / 2
     atom r
-    r = (ExpAtom(a) - EunExp(-a)) / 2
+    r = (ExpAtom(a) - ExpAtom(-a)) / 2
     return adjust_atom(r)
 end function
 
