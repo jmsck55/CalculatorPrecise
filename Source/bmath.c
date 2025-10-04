@@ -120,112 +120,94 @@ double Exp(double x)
 }
 
 
-/*
--- Raw function: Natural Logarithm
+// Raw function: Natural Logarithm
 
-global constant ACONST_E = ExpAtom(1)
+const double ACONST_E = ExpAtom(1.0);
 
-global function LnAtom(atom a)
-    -- Function: NaturalLogarithm()
-    -- Use for testing the method.
-    -- Alternative, between 0 and 2 exclusively:
-    -- ln(x) = - Sum[k = 1 to inf] ((-1)^k * (-1 + x)^k) / k, for abs(-1 + x) < 1; x > 0 and x < 2;
-    -- ((-1)^k * (-1 + x)^k) / k
-    -- ((-x + 1)^k) / k
-    -- Alternative, away from 0 to 2 exclusively: // Use factoring of "e" instead.
-    -- ln(x) = ln(-1 + x) - Sum[k = 1 to inf] ((-1)^k * (-1 + x)^(-k)) / k, for abs(-1 + x) > 1, x < 0 or x > 2;
-    --
-    -- precalculate:
-    -- xNegativePlusOne = (1 - x), then multiply, and store as "p".
-    -- k = 1, (xNegativePlusOne^1) / 1
-    -- k = 2, (xNegativePlusOne^2) / 2
-    -- k = 3, (xNegativePlusOne^3) / 3
-    -- k = 4, (xNegativePlusOne^4) / 4
-    -- k = 5, (xNegativePlusOne^5) / 5
-    -- Then, summate and negate, then return sum:
-    -- while 1 do
-    --  p *= xNegativePlusOne
-    --  sum += p / k
-    --  if k == inf then -- as k approaches infinity.
-    --    exit -- break;
-    --  end if
-    --  k += 1
-    -- end while
-    -- return - (sum)
-    atom x, p, sum, last
-    integer f
-    if a <= 0 then
-      abort(1)
-    elsif a >= 2 then
-      -- factor, first find n, then calculate e^n
-      -- log(m/e^n) + n = log(m)
-      if a > ACONST_E then
-        f = floor(log(a))
+double Log(double a)
+{
+    // Function: NaturalLogarithm()
+    // Use for testing the method.
+    // Alternative, between 0 and 2 exclusively:
+    // ln(x) = - Sum[k = 1 to inf] ((-1)^k * (-1 + x)^k) / k, for abs(-1 + x) < 1; x > 0 and x < 2;
+    // ((-1)^k * (-1 + x)^k) / k
+    // ((-x + 1)^k) / k
+    // Alternative, away from 0 to 2 exclusively: // Use factoring of "e" instead.
+    // ln(x) = ln(-1 + x) - Sum[k = 1 to inf] ((-1)^k * (-1 + x)^(-k)) / k, for abs(-1 + x) > 1, x < 0 or x > 2;
+    //
+    // precalculate:
+    // xNegativePlusOne = (1 - x), then multiply, and store as "p".
+    // k = 1, (xNegativePlusOne^1) / 1
+    // k = 2, (xNegativePlusOne^2) / 2
+    // k = 3, (xNegativePlusOne^3) / 3
+    // k = 4, (xNegativePlusOne^4) / 4
+    // k = 5, (xNegativePlusOne^5) / 5
+    // Then, summate and negate, then return sum:
+    // while 1 do
+    //  p *= xNegativePlusOne
+    //  sum += p / k
+    //  if k == inf then -- as k approaches infinity.
+    //    exit -- break;
+    //  end if
+    //  k += 1
+    // end while
+    // return - (sum)
+    //
+    double x, p, sum, last, f;
+    if (a <= 0.0)
+    {
+      exit(1);
+    }
+    else if (a >= 2.0)
+    {
+      // factor, first find n, then calculate e^n
+      // log(m/e^n) + n = log(m)
+      if (a > ACONST_E)
+      {
+        f = floor(log(a));
+      }
       else
-        f = 1
-      end if
-      a = DivAtom(a, power(ACONST_E, f))
+      {
+        f = 1.0;
+      }
+      a = Divl((long double)a, (long double)power(ACONST_E, f));
+    }
     else
-      f = 0
-    end if
-    x = 1 - a
-    last = 0
-    p = 1
-    sum = 0
-    for k = 1 to 1000000000 do
-      p *= x
-      sum += DivAtom(p, k)
-      if sum = last then
-        exit
-      end if
-      last = sum
-    end for
-    sum = f - (sum)
-    return adjust_atom(sum)
-end function
+    {
+      f = 0.0;
+    }
+    x = 1 - a;
+    last = 0.0;
+    p = 1.0;
+    sum = 0.0;
+    for (int k = 1; k <= 1000000000; k++)
+    {
+      p *= x;
+      sum += Divl((long double)p, (long double)k);
+      if (sum == last)
+      {
+        break;
+      }
+      last = sum;
+    }
+    sum = f - (sum);
+    return sum;
+}
 
-global function Ln(object x)
-  sequence s
-  if atom(x) then
-    return LnAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Ln(x[i])
-  end for
-  return s
-end function
+double Power(double base, double raisedTo)
+{
+    // b^x = e^(x * ln(b));
+    double r;
+    r = Exp(Log(base) * raisedTo);
+    return r;
+}
 
-global function PowerAtom(atom base, atom raisedTo)
--- b^x = e^(x * ln(b))
-    atom r
-    r = ExpAtom(LnAtom(base) * raisedTo)
-    return r
-end function
-
-global function Power(object x, object y)
-  sequence s
-  if atom(x) and atom(y) then
-    return PowerAtom(x, y)
-  end if
-  s = Exp(Ln(x) * y)
-  return s
-end function
-
-global function GeneralRootAtom(atom rooted, atom anyNumber)
-    atom r
-    r = PowerAtom(rooted, MultInvAtom(anyNumber))
-    return r
-end function
-
-global function GeneralRoot(object x, object y)
-  sequence s
-  if atom(x) and atom(y) then
-    return GeneralRootAtom(x, y)
-  end if
-  s = Power(x, MultInv(y))
-  return s
-end function
+double GeneralRoot(double rooted, double nyNumber)
+{
+    double r;
+    r = Power(rooted, MultInvl((long double)anyNumber));
+    return r;
+}
 
 -- Trig functions
 
