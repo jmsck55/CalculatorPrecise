@@ -510,285 +510,136 @@ double ArcCoth(double a)
     return r;
 }
 
-/*
+double ArcCsc(double a)
+{
+  double r;
+  r = ArcSin(MultInvl((long double)a));
+  return r;
+}
 
-global function ArcCscAtom(atom a)
-  atom r
-  r = ArcSinAtom(MultInvAtom(a))
-  return r
-end function
+double ArcCsch(double a)
+{
+// arccsch(x) = x != 0; 1 / x => a; ln(a + sqrt(a^2 + 1))
+    double r;
+    if (a == 0.0)
+    {
+        exit(1);
+    }
+    r = MultInvl((long double)a);
+    r = Log(r + Sqrt(r * r + 1.0));
+    return r;
+}
 
-global function ArcCsc(object x)
-  sequence s
-  if atom(x) then
-    return ArcCscAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcCsc(x[i])
-  end for
-  return s
-end function
+double ArcSec(double a)
+{
+    double r;
+    r = ArcCos(MultInvl((long double)a));
+    return r;
+}
 
-global function ArcCschAtom(atom a)
--- arccsch(x) = x != 0; 1 / x => a; ln(a + sqrt(a^2 + 1))
-    atom r
-    if a = 0 then
-        abort(1)
-    end if
-    r = MultInvAtom(a)
-    r = LnAtom(r + SqrtAtom(r * r + 1))
-    return r
-end function
+double ArcSech(double a)
+{
+// arcsech(x) = 0 < x <= 1; 1 / x => a; ln(a + sqrt(a^2 - 1)) :: ln((1 + sqrt(1 - x^2)) / x)
+    double r;
+    if ((a <= 0.0) or (a > 1.0))
+    {
+        exit(1);
+    }
+    r = MultInvl((long double)a);
+    r = Log(r + Sqrt(r * r - 1.0));
+    return r;
+}
 
-global function ArcCsch(object x)
-  sequence s
-  if atom(x) then
-    return ArcCschAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcCsch(x[i])
-  end for
-  return s
-end function
+double ArcSinhAtom(double a)
+{
+// arcsinh(x) = ln(x + sqrt(x^2 + 1))
+    double r;
+    r = Sqrt(a * a + 1.0);
+    r = Log(a + r);
+    return r;
+}
 
-global function ArcSecAtom(atom a)
-    atom r
-    r = ArcCosAtom(MultInvAtom(a))
-    return r
-end function
+double ArcTanh(double a)
+{
+// arctanh(x) = abs(x) < 1; ln((1 + x)/(1 - x)) / 2
+    double r;
+    if (abs(a) >= 1.0)
+    {
+        exit(1);
+    }
+    r = Divl((long double)(a + 1.0), (long double)(1.0 - a));
+    r = Divl((long double)Log(r), (long double)2.0);
+    return r;
+}
 
-global function ArcSec(object x)
-  sequence s
-  if atom(x) then
-    return ArcSecAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcSec(x[i])
-  end for
-  return s
-end function
+double Cot(double a)
+{
+  double r;
+  r = MultInvl((long double)Tan(a));
+  return r;
+}
 
-global function ArcSechAtom(atom a)
--- arcsech(x) = 0 < x <= 1; 1 / x => a; ln(a + sqrt(a^2 - 1)) :: ln((1 + sqrt(1 - x^2)) / x)
-    atom r
-    if a <= 0 or a > 1 then
-        abort(1)
-    end if
-    r = MultInvAtom(a)
-    r = LnAtom(r + SqrtAtom(r * r - 1))
-    return r
-end function
+double Coth(double a)
+{
+// coth(x) = x != 0; 1 / tanh(x)
+    double r;
+    if (a == 0.0)
+    {
+        exit(1);
+    }
+    r = MultInvl((long double)Tanh(a));
+    return r;
+}
 
-global function ArcSech(object x)
-  sequence s
-  if atom(x) then
-    return ArcSechAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcSech(x[i])
-  end for
-  return s
-end function
+double Csc(double a)
+{
+    double r;
+    r = MultInvl((long double)Sin(a));
+    return r;
+}
 
-global function ArcSinhAtom(atom a)
--- arcsinh(x) = ln(x + sqrt(x^2 + 1))
-    atom r
-    r = SqrtAtom(a * a + 1)
-    r = LnAtom(a + r)
-    return r
-end function
+double Csch(double a)
+{
+// csch(x) = x != 0; 1 / sinh(x)
+    double r;
+    if (a == 0.0)
+    {
+        exit(1);
+    }
+    r = MultInvl((long double)Sinh(a));
+    return r;
+}
 
-global function ArcSinh(object x)
-  sequence s
-  if atom(x) then
-    return ArcSinhAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcSinh(x[i])
-  end for
-  return s
-end function
+double Sec(double a)
+{
+    double r;
+    r = MultInvl((long double)Cos(a));
+    return r;
+}
 
-global function ArcTanhAtom(atom a)
--- arctanh(x) = abs(x) < 1; ln((1 + x)/(1 - x)) / 2
-    atom r
-    if abs(a) >= 1 then
-        abort(1)
-    end if
-    r = DivAtom(a + 1, 1 - a)
-    r = LnAtom(r) / 2
-    return adjust_atom(r)
-end function
+double Sech(double a)
+{
+// sech(x) = 1 / cosh(x)
+    double r;
+    r = MultInvl((long double)Cosh(a));
+    return r;
+}
 
-global function ArcTanh(object x)
-  sequence s
-  if atom(x) then
-    return ArTanhAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcTanh(x[i])
-  end for
-  return s
-end function
+double RadiansToDegrees(double r)
+{
+    double d;
+    d = Divl((long double)ACONST_PI, (long double)2.0);
+    d = Divl((long double)r, (long double)d) * 90;
+    return d;
+}
 
-global function CotAtom(atom a)
-  atom r
-  r = MultInvAtom(TanAtom(a))
-  return r
-end function
+double DegreesToRadians(double d)
+{
+    double r;
+    r = Divl((long double)ACONST_PI, (long double)2.0);
+    r *= DivAtom(d, 90);
+    return r;
+}
 
-global function Cot(object x)
-  sequence s
-  if atom(x) then
-    return CotAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Cot(x[i])
-  end for
-  return s
-end function
+// end of file.
 
-global function CothAtom(atom a)
--- coth(x) = x != 0; 1 / tanh(x)
-    atom r
-    if a = 0 then
-        abort(1)
-    end if
-    r = MultInvAtom(TanhAtom(a))
-    return r
-end function
-
-global function Coth(object x)
-  sequence s
-  if atom(x) then
-    return CothAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Coth(x[i])
-  end for
-  return s
-end function
-
-global function CscAtom(atom a)
-    atom r
-    r = MultInvAtom(SinAtom(a))
-    return r
-end function
-
-global function Csc(object x)
-  sequence s
-  if atom(x) then
-    return CscAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Csc(x[i])
-  end for
-  return s
-end function
-
-global function CschAtom(atom a)
--- csch(x) = x != 0; 1 / sinh(x)
-    atom r
-    if a = 0 then
-        abort(1)
-    end if
-    r = MultInvAtom(SinhAtom(a))
-    return r
-end function
-
-global function Csch(object x)
-  sequence s
-  if atom(x) then
-    return CschAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Csch(x[i])
-  end for
-  return s
-end function
-
-global function SecAtom(atom a)
-    atom r
-    r = MultInvAtom(CosAtom(a))
-    return r
-end function
-
-global function Sec(object x)
-  sequence s
-  if atom(x) then
-    return SecAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Sec(x[i])
-  end for
-  return s
-end function
-
-global function SechAtom(atom a)
--- sech(x) = 1 / cosh(x)
-    atom r
-    r = MultInvAtom(CoshAtom(a))
-    return r
-end function
-
-global function Sech(object x)
-  sequence s
-  if atom(x) then
-    return SechAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Sech(x[i])
-  end for
-  return s
-end function
-
-global function RadiansToDegreesAtom(atom r)
-    atom d
-    d = DivAtom(r, (ACONST_PI / 2)) * 90
-    return adjust_atom(d)
-end function
-
-global function RadiansToDegrees(object x)
-  sequence s
-  if atom(x) then
-    return RadiansToDegreesAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = RadiansToDegrees(x[i])
-  end for
-  return s
-end function
-
-global function DegreesToRadiansAtom(atom d)
-    atom r
-    r = DivAtom(d, 90) * (ACONST_PI / 2)
-    return adjust_atom(r)
-end function
-
-global function DegreesToRadians(object x)
-  sequence s
-  if atom(x) then
-    return DegreesToRadiansAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = DegreesToRadians(x[i])
-  end for
-  return s
-end function
-
--- end of file.
-*/
