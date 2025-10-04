@@ -12,8 +12,8 @@
 
 #define BMATH_ITERS 1000000
 
-#define RoundDownIf 1
-#define RoundUpNegIf 2
+#define RoundDownIf 3
+#define RoundUpNegIf 4
 #define RoundBothWays 0
 
 static int adjustMethod = RoundDownIf;
@@ -27,7 +27,7 @@ double adjust(long double g)
     return b;
   }
   if (
-    (((adjustMethod == 1) or (adjustMethod == 0)) and (c > g))
+    (((adjustMethod == 3) or (adjustMethod == 0)) and (c > g))
     ) // round down. // if (fasbl(c) > fasbl(g)) // round to zero.
   {
     g <<= 1; // g *= 2;
@@ -35,7 +35,7 @@ double adjust(long double g)
     b = (double)g;
   }
   else if (
-    (((adjustMethod == 2) or (adjustMethod == 0)) and (c < g))
+    (((adjustMethod == 4) or (adjustMethod == 0)) and (c < g))
     ) // round up.
   {
     c <<= 1;
