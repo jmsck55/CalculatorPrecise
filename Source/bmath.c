@@ -420,66 +420,48 @@ double ArcCos(double a)
   return r;
 }
 
--- other trig functions
+// other trig functions
 
--- Cosh
--- Sinh
--- Tanh
--- ArcCosh
--- ArcCot
--- ArcCoth
--- ArcCsc
--- ArcCsch
--- ArcSec
--- ArcSech
--- ArcSinh
--- ArcTanh
--- Cot
--- Coth
--- Csc
--- Csch
--- Sec
--- Sech
+// Cosh
+// Sinh
+// Tanh
+// ArcCosh
+// ArcCot
+// ArcCoth
+// ArcCsc
+// ArcCsch
+// ArcSec
+// ArcSech
+// ArcSinh
+// ArcTanh
+// Cot
+// Coth
+// Csc
+// Csch
+// Sec
+// Sech
 
-global function CoshAtom(atom a)
--- cosh(x) = (e^(x) + e^(-x)) / 2
-    atom r
-    r = (ExpAtom(a) + ExpAtom(-a)) / 2
-    return adjust_atom(r)
-end function
 
-global function Cosh(object x)
-  sequence s
-  if atom(x) then
-    return CoshAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Cosh(x[i])
-  end for
-  return s
-end function
+double Cosh(double a)
+{
+// cosh(x) = (e^(x) + e^(-x)) / 2
+    double r;
+    r = Divl((long double)(Exp(a) + Exp(-a)), (long double)2.0);
+    return r;
+}
 
-global function SinhAtom(atom a)
--- sinh(x) = (e^(x) - e^(-x)) / 2
-    atom r
-    r = (ExpAtom(a) - EunExp(-a)) / 2
-    return adjust_atom(r)
-end function
+double Sinh(double a)
+{
+// sinh(x) = (e^(x) - e^(-x)) / 2
+    double r;
+    r = Divl((long double)(Exp(a) - Exp(-a)), (long double)2.0);
+    return r;
+}
 
-global function Sinh(object x)
-  sequence s
-  if atom(x) then
-    return SinhAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Sinh(x[i])
-  end for
-  return s
-end function
+/*
 
-global function TanhAtom(atom a)
+Tanh
+tom(atom a)
 -- tanh(x) = e^(2*x) => a; (a - 1) / (a + 1)
     atom r
     r = ExpAtom(a * 2)
