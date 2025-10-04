@@ -38,6 +38,7 @@ double adjust(long double g)
   }
   else if ((adjustMethod == 2) or
     (((adjustMethod == 4) or (adjustMethod == 0)) and (c < g))
+    ) // round up.
   {
     c <<= 1;
     c -= g;
@@ -458,99 +459,58 @@ double Sinh(double a)
     return r;
 }
 
+double Tanh(double a)
+{
+// tanh(x) = e^(2*x) => a; (a - 1) / (a + 1)
+    double r;
+    r = Exp(a * 2.0);
+    r = Divl((long double)(r - 1.0), (long double)(r + 1.0));
+    return r;
+}
+
+double ArcCosh(double a)
+{
+// arccosh(x) = x >= 1; ln(x + sqrt(x^2 - 1))
+  double r;
+  if (a < 1.0)
+  {
+    exit(1);
+  }
+  r = Sqrt(a * a - 1.0);
+  r = Log(a + r);
+  return r;
+}
+
+double ArcCot(double a)
+{
+    double r;
+    if (a == 0.0)
+    {
+        return Divl((long double)ACONST_PI, (long double)2.0);
+    }
+    r = ArcTan(MultInvl((long double)a));
+    if (a < 0.0)
+    {
+        r += ACONST_PI;
+        r = adjust(r);
+    }
+    return r;
+}
+
+double ArcCoth(double a)
+{
+// arccoth(x) = abs(x) > 1; ln((x + 1)/(x - 1)) / 2
+    double r;
+    if (abs(a) <= 1.0)
+    {
+        exit(1);
+    }
+    r = Divl((long double)(a + 1.0), (long double)(a - 1.0));
+    r = Divl((long double)LnAtom(r), (long double)2.0);
+    return r;
+}
+
 /*
-
-Tanh
-tom(atom a)
--- tanh(x) = e^(2*x) => a; (a - 1) / (a + 1)
-    atom r
-    r = ExpAtom(a * 2)
-    r = DivAtom(r - 1, r + 1)
-    return r
-end function
-
-global function Tanh(object x)
-  sequence s
-  if atom(x) then
-    return TanhAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Tanh(x[i])
-  end for
-  return s
-end function
-
-global function ArcCoshAtom(atom a)
--- arccosh(x) = x >= 1; ln(x + sqrt(x^2 - 1))
-  atom r
-  if a < 1 then
-    abort(1)
-  end if
-  r = SqrtAtom(a * a - 1)
-  r = LnAtom(a + r)
-  return r
-end function
-
-global function ArcCosh(object x)
-  sequence s
-  if atom(x) then
-    return ArcCoshAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcCosh(x[i])
-  end for
-  return s
-end function
-
-global function ArcCotAtom(atom a)
-    atom r
-    if a = 0 then
-        return adjust_atom(ACONST_PI / 2)
-    end if
-    r = ArcTanAtom(MultInvAtom(a))
-    if a < 0 then
-        r += ACONST_PI
-        return adjust_atom(r)
-    end if
-    return r
-end function
-
-global function ArcCot(object x)
-  sequence s
-  if atom(x) then
-    return ArcCotAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcCot(x[i])
-  end for
-  return s
-end function
-
-global function ArcCothAtom(atom a)
--- arccoth(x) = abs(x) > 1; ln((x + 1)/(x - 1)) / 2
-    atom r
-    if abs(a) <= 1 then
-        abort(1)
-    end if
-    r = DivAtom(a + 1, a - 1)
-    r = LnAtom(r) / 2
-    return adjust_atom(r)
-end function
-
-global function ArcCoth(object x)
-  sequence s
-  if atom(x) then
-    return ArcCothAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcCoth(x[i])
-  end for
-  return s
-end function
 
 global function ArcCscAtom(atom a)
   atom r
