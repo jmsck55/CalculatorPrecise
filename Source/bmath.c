@@ -13,8 +13,8 @@
 #define BMATH_ITERS 1000000
 
 #define RoundDownIf 3
-#define RoundUpNegIf 4
-#define RoundBothWays 0
+#define RoundUpIf 4
+#define RoundToZero 0
 
 static int adjustMethod = RoundDownIf;
 
