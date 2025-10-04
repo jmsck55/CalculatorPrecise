@@ -14,8 +14,8 @@
 
 #define RoundDownAlways 1
 #define RoundDownIf 3
-#define RoundUpAlways 2
-#define RoundUpIf 4
+#define RoundUpNegAlways 2
+#define RoundUpNegIf 4
 #define RoundBothWays 0
 
 static int adjustMethod = RoundDownIf;
