@@ -12,15 +12,36 @@
 
 #define BMATH_ITERS 1000000
 
+#define RoundDownAlways 1
+#define RoundDownIf 3
+#define RoundUpAlways 2
+#define RoundUpIf 4
+#define RoundBothWays 0
+
+static int adjustMethod = RoundDownIf;
+
 double adjust(long double g)
 {
   double b = (double)g;
   long double c = (long double)b;
-  if (c > g) // round down. // if (fasbl(c) > fasbl(g)) // round to zero.
+  if (c == g)
+  {
+    return b;
+  }
+  if ((adjustMethod == 1) or
+    (((adjustMethod == 3) or (adjustMethod == 0)) and (c > g))
+    ) // round down. // if (fasbl(c) > fasbl(g)) // round to zero.
   {
     g <<= 1; // g *= 2;
     g -= c;
     b = (double)g;
+  }
+  else if ((adjustMethod == 2) or
+    (((adjustMethod == 4) or (adjustMethod == 0)) and (c < g))
+  {
+    c <<= 1;
+    c -= g;
+    b = (double)c;
   }
   return b;
 }
@@ -274,180 +295,130 @@ double Sin(double a)
 }
 
 
-global function TanAtom(atom a)
-  atom r
-  r = DivAtom(SinAtom(a), CosAtom(a))
-  return r
-end function
+double Tan(double a)
+{
+  double r;
+  r = Divl((long double)Sin(a), (long double)Cos(a));
+  return r;
+}
 
-global function Tan(object x)
-  sequence s
-  if atom(x) then
-    return TanAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = Tan(x[i])
-  end for
-  return s
-end function
 
--- arc functions
+// arc functions
 
-global function ArcTanAtom(atom a)
--- Begin ArcTanExpA()
---                z        +inf         n             2kz^2
--- arctan(z) = ------- * Sumation of Product of --------------------
---             1 + z^2     n=0         k=1      (2k + 1) * (1 + z^2)
---
--- (The term in the sum for n = 0 is the empty product, so is 1.)
+double ArcTan(double a)
+{
+// Begin ArcTanExpA()
+//                z        +inf         n             2kz^2
+// arctan(z) = ------- * Sumation of Product of --------------------
+//             1 + z^2     n=0         k=1      (2k + 1) * (1 + z^2)
+//
+// (The term in the sum for n = 0 is the empty product, so is 1.)
+//
+// ans = (z / (1 + z*z)) * Sum [ n=0 to +inf ] Prod [ k=1 to n ] (2kz*z) / ((2k + 1) * (1 + z*z))
+//
+  double b, r, s, p, c;
+  b = a * a + 1.0;
+  s = 1.0;
+  for (int n = 1; n <= 1000000000; n++)
+  {
+    p = 1.0;
+    for (int k = 1; k <= n; k++)
+    {
+      p *= Divl((long double)(k * 2.0 * (b - 1.0)), (long double)((k * 2.0 + 1.0) * b));
+    }
+    c = s;
+    s += p;
+    if (s = c)
+    {
+      break;
+    }
+  }
+  r = Divl((long double)a, (long double)b) * s;
+  return r;
+}
 
--- ans = (z / (1 + z*z)) * Sum [ n=0 to +inf ] Prod [ k=1 to n ] (2kz*z) / ((2k + 1) * (1 + z*z))
+const double ACONST_PI = 4.0 * ArcTan(1.0); // 4 * arctan(1)
 
-  atom b, r, s, p, c
-  b = a * a + 1
-  s = 1
-  for n = 1 to 1000000000 do
-    p = 1
-    for k = 1 to n do
-      p *= DivAtom(k * 2 * (b - 1), (k * 2 + 1) * b)
-    end for
-    c = s
-    s += p
-    if s = c then
-      exit
-    end if
-  end for
-  r = DivAtom(a, b) * s
-  return adjust_atom(r)
-end function
+double ArcTan2(double y, double x)
+{
+// ArcTan2(y, x) = ArcTan(y/x)
+//
+// The comments below use UTF-8
+//
+// atan2(y,x) = arctan(y/x) if x > 0,
+// atan2(y,x) = arctan(y/x) + π if x < 0 and y≥0,
+// atan2(y,x) = arctan(y/x) - π if x < 0 and y < 0,
+// atan2(y,x) = +π / 2 if x=0 and y > 0,
+// atan2(y,x) = - π / 2 if x=0 and y < 0,
+// atan2(y,x) = undefined if x=0 and y=0
+//
+// Table:
+//      x     arctan(x) (°)  arctan(x) (rad.)
+//      -∞    -90°   -π/2
+//      -√3   -60°   -π/3
+//      -1    -45°   -π/4
+//      -1/√3 -30°   -π/6
+//      0       0°     0
+//      1/√3  30°    π/6
+//      1     45°    π/4
+//      √3    60°    π/3
+//      +∞    90°    π/2
+//
+    double tmp;
+    if (x == 0.0) // x == 0
+    {
+        if (y == 0.0) // y == 0
+        {
+            exit(1);
+        }
+        tmp = Divl((long double)ACONST_PI, (long double)2.0); // half of PI.
+        if (y > 0.0) // y > 0
+        {
+            return tmp;
+        }
+        else if (y < 0.0) // y < 0
+        {
+            return -(tmp); // negated tmp
+        }
+    }
+    tmp = ArcTan(Divl((long double)y, (long double)x));
+    if (x > 0.0) // x > 0
+    {
+        return tmp;
+    }
+    if (y < 0.0) // y < 0
+    {
+        return adjust((long double)(tmp - ACONST_PI));
+    }
+    else
+    {
+        return adjust((long double)(tmp + ACONST_PI));
+    }
+}
 
-global constant ACONST_PI = ArcTanAtom(1) * 4
-
-global function ArcTan(object x)
-  sequence s
-  if atom(x) then
-    return ArcTanAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcTan(x[i])
-  end for
-  return s
-end function
-
-global function ArcTan2Atom(atom y, atom x)
--- ArcTan2(y, x) = ArcTan(y/x)
---
--- The comments below use UTF-8
---
--- atan2(y,x) = arctan(y/x) if x > 0,
--- atan2(y,x) = arctan(y/x) + π if x < 0 and y≥0,
--- atan2(y,x) = arctan(y/x) - π if x < 0 and y < 0,
--- atan2(y,x) = +π / 2 if x=0 and y > 0,
--- atan2(y,x) = - π / 2 if x=0 and y < 0,
--- atan2(y,x) = undefined if x=0 and y=0
---
--- Table:
---      x     arctan(x) (°)  arctan(x) (rad.)
---      -∞    -90°   -π/2
---      -√3   -60°   -π/3
---      -1    -45°   -π/4
---      -1/√3 -30°   -π/6
---      0       0°     0
---      1/√3  30°    π/6
---      1     45°    π/4
---      √3    60°    π/3
---      +∞    90°    π/2
---
-    atom tmp
-    if x = 0 then -- x = 0
-        if y = 0 then -- y = 0
-            abort(1)
-        end if
-        tmp = ACONST_PI / 2 -- half PI.
-        if y > 0 then -- y > 0
-            return adjust_atom(tmp)
-        elsif y < 0 then -- y < 0
-            return adjust_atom(-(tmp)) -- negated tmp
-        end if
-    end if
-    tmp = ArcTanAtom(DivAtom(y, x))
-    if x > 0 then -- x > 0
-        return tmp
-    end if
-    if y < 0 then -- y < 0
-        return adjust_atom(tmp - ACONST_PI)
-    end if
-    return adjust_atom(tmp + ACONST_PI)
-end function
-
-global function ArcTan2(object y, object x)
-  sequence s
-  if atom(y) and atom(x) then
-    return ArcTan2Atom(y, x)
-  end if
-  if atom(y) then
-    y = repeat(y, length(x))
-  end if
-  if atom(x) then
-    x = repeat(x, length(y))
-  end if
-  if length(y) != length(x) then
-    abort(1)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcTan2(y[i], x[i])
-  end for
-  return s
-end function
-
-global function ArcSinAtom(atom a)
--- arcsin(x) = arctan( x / sqrt(1 - x^2) )
-  atom r
-  r = SqrtAtom(1 - a * a)
-  r = DivAtom(a, r)
-  r = ArcTanAtom(r)
-  return r
-end function
-
-global function ArcSin(object x)
-  sequence s
-  if atom(x) then
-    return ArcSinAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcSin(x[i])
-  end for
-  return s
-end function
-
-global function ArcCosAtom(atom a)
--- arccos(x) = arctan( sqrt(1 - x^2) / x )
--- Limited domain: -1 to 1
--- Also:
---   arccos(x) = arcsin(1) - arcsin(x)
---   arccos(x) = (EunPi / 2) - arcsin(x)
-  atom r
-  r = SqrtAtom(1 - a * a)
-  r = DivAtom(r, a)
-  r = ArcTanAtom(r)
-  return r
-end function
-
-global function ArcCos(object x)
-  sequence s
-  if atom(x) then
-    return ArcCosAtom(x)
-  end if
-  s = repeat(0, length(x))
-  for i = 1 to length(x) do
-    s[i] = ArcCos(x[i])
-  end for
-  return s
-end function
+double ArcSin(double a)
+{
+// arcsin(x) = arctan( x / sqrt(1 - x^2) )
+  double r;
+  r = Sqrt(1.0 - a * a);
+  r = Divl((long double)a, (long double)r);
+  r = ArcTan(r);
+  return r;
+}
+  
+double ArcCos(double a)
+{
+// arccos(x) = arctan( sqrt(1 - x^2) / x )
+// Limited domain: -1 to 1
+// Also:
+//   arccos(x) = arcsin(1) - arcsin(x)
+//   arccos(x) = (EunPi / 2) - arcsin(x)
+  double r;
+  r = Sqrt(1.0 - a * a);
+  r = Divl((long double)r, (long double)a);
+  r = ArcTan(r);
+  return r;
+}
 
 -- other trig functions
 
