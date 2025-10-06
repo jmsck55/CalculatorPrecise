@@ -17,7 +17,7 @@
 #define RoundDownIf 3
 #define RoundUpIf 4
 #define RoundToZero 0
-#define RoundNot -1
+#define RoundNot 15
 
 static int adjustMethod;
 
