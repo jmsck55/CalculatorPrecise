@@ -1,5 +1,4 @@
-# AccurateCalculator
-A calculator that is precise.
+# CalculatorPrecise
 
 This repository uses software to fix the floating-point Pentium division bug, using Newton's method.
 
