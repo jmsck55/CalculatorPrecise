@@ -241,8 +241,22 @@ double GeneralRoot(double rooted, double nyNumber)
 
 double Cos(double a)
 {
+// Range: -PI/2 to PI/2, exclusive
 // cos(x) = 1 - ((x^2)/(2!)) + ((x^4)/(4!)) - ((x^6)/(6!)) + ((x^8)/(8!)) - ...
   double f, r, d, c, x;
+  if (a == 0.0)
+  {
+    return 1.0;
+  }
+  x = Divl((long double)ACONST_PI, (long double)2.0);
+  if (a < -(x))
+  {
+    exit(1);
+  }
+  if (a > x)
+  {
+    exit(1);
+  }
   f = 1.0;
   r = 1.0;
   d = -1.0;
@@ -268,8 +282,27 @@ double Cos(double a)
 
 double Sin(double a)
 {
+// Cases: 0 equals zero (0)
+// Range: -PI/2 to PI/2, inclusive
+// To find sin(x):
+// sin(x) = cos(x - PI/2)
+// y = sin(x)
+// y = cos(x - PI/2)
 // sine(x) = x - ((x^3)/(3!)) + ((x^5)/(5!)) - ((x^7)/(7!)) + ((x^9)/(9!)) - ...
   double f, r, d, c, x;
+  if (a == 0.0)
+  {
+    return 0.0;
+  }
+  x = Divl((long double)ACONST_PI, (long double)2.0);
+  if (a < -(x))
+  {
+    exit(1);
+  }
+  if (a > x)
+  {
+    exit(1);
+  }
   f = 2.0;
   r = a;
   d = -1.0;
@@ -399,12 +432,20 @@ double ArcSin(double a)
 {
 // arcsin(x) = arctan( x / sqrt(1 - x^2) )
   double r;
+  if (a == 1.0)
+  {
+    exit(1);
+  }
+  if (a == -1.0) // -1.0
+  {
+    exit(1);
+  }
   r = Sqrt(1.0 - a * a);
   r = Divl((long double)a, (long double)r);
   r = ArcTan(r);
   return r;
 }
-  
+
 double ArcCos(double a)
 {
 // arccos(x) = arctan( sqrt(1 - x^2) / x )
@@ -413,6 +454,14 @@ double ArcCos(double a)
 //   arccos(x) = arcsin(1) - arcsin(x)
 //   arccos(x) = (EunPi / 2) - arcsin(x)
   double r;
+  if (a < -1.0)
+  {
+    exit(1);
+  }
+  if (a > 1.0)
+  {
+    exit(1);
+  }
   r = Sqrt(1.0 - a * a);
   r = Divl((long double)r, (long double)a);
   r = ArcTan(r);
