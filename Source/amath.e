@@ -21,7 +21,7 @@ include std/convert.e
 global integer AMATH_DEBUG
 AMATH_DEBUG = 0
 
-constant accuracy = power(2, 52) -- question
+constant precision = power(2, 52) -- question
 
 global function adjust_atom(atom a)
 -- Euphoria 32-bit uses doubles (64-bit floating point numbers) for its atoms.
@@ -46,18 +46,19 @@ global function MultInvAtom(atom x)
   for i = 1 to AMATH_ITERS do
     t = g * x
     if AMATH_DEBUG then
-      if round(t, accuracy) = 1 then
+      if round(t, precision) = 1 then
         exit
       end if
-      printf(2, "calc [%d] corrected %g\n", {i, t - 1})
-    elsif t = 1 then
-      exit
+      printf(2, "calc [%d] is %g\n", {i, t - 1}
     end if
-    if t = last then
-      exit
-    end if
-    last = t
     g *= ( 2 - t )
+    if t = 1 then
+      exit
+    end if
+    if g = last then
+      exit
+    end if
+    last = g
   end for
   return adjust_atom(g)
 end function
@@ -312,7 +313,6 @@ end function
 global function SinAtom(atom a)
 -- sine(x) = x - ((x^3)/(3!)) + ((x^5)/(5!)) - ((x^7)/(7!)) + ((x^9)/(9!)) - ...
   atom f, r, d, c, x
-  integer i
   f = 2
   r = a
   d = -1
@@ -563,7 +563,7 @@ end function
 global function SinhAtom(atom a)
 -- sinh(x) = (e^(x) - e^(-x)) / 2
     atom r
-    r = (ExpAtom(a) - EunExp(-a)) / 2
+    r = (ExpAtom(a) - ExpAtom(-a)) / 2
     return adjust_atom(r)
 end function
 
