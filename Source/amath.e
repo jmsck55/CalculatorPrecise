@@ -38,21 +38,20 @@ end function
 
 global constant AMATH_ITERS = 1000000
 
-global function MultInvAtom(atom x)
+global function MultInvAtom(atom x, atom last = 0)
 -- performs 1/x
   atom t, g, last
   g = 1 / x
-  last = 0
   for i = 1 to AMATH_ITERS do
+    if g = last then
+      exit
+    end if
     t = g * x
     if AMATH_DEBUG then
       if round(t, accuracy) = 1 then
         exit
       end if
       printf(2, "calc [%d] corrected %g\n", {i, t - 1}
-    end if
-    if g = last then
-      exit
     end if
     last = g
     g *= ( 2 - t )
