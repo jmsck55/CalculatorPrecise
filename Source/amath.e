@@ -40,7 +40,7 @@ global constant AMATH_ITERS = 1000000
 
 global function MultInvAtom(atom x, atom last = 0)
 -- performs 1/x
-  atom t, g, last
+  atom t, g
   g = 1 / x
   for i = 1 to AMATH_ITERS do
     t = g * x
