@@ -16,7 +16,7 @@
 //#define RoundUpIf 4
 //#define RoundToZero 0
 
-static int adjustMethod = RoundDownIf;
+static int adjustMethod = RoundToZero;
 
 double adjust(long double g)
 {
