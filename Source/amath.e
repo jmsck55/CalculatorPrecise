@@ -49,15 +49,16 @@ global function MultInvAtom(atom x)
       if round(t, accuracy) = 1 then
         exit
       end if
-      printf(2, "calc [%d] corrected %g\n", {i, t - 1})
-    elsif t = 1 then
+      printf(2, "calc [%d] corrected %g\n", {i, t - 1}
+    end if
+    if g = last then
       exit
     end if
-    if t = last then
-      exit
-    end if
-    last = t
+    last = g
     g *= ( 2 - t )
+    if t = 1 then
+      exit
+    end if
   end for
   return adjust_atom(g)
 end function
