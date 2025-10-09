@@ -21,7 +21,7 @@ include std/convert.e
 global integer AMATH_DEBUG
 AMATH_DEBUG = 0
 
-constant accuracy = power(2, 52) -- question
+constant precision = power(2, 52) -- question
 
 global function adjust_atom(atom a)
 -- Euphoria 32-bit uses doubles (64-bit floating point numbers) for its atoms.
@@ -45,10 +45,10 @@ global function MultInvAtom(atom x, atom last = 0)
   for i = 1 to AMATH_ITERS do
     t = g * x
     if AMATH_DEBUG then
-      if round(t, accuracy) = 1 then
+      if round(t, precision) = 1 then
         exit
       end if
-      printf(2, "calc [%d] corrected %g\n", {i, t - 1}
+      printf(2, "calc [%d] is %g\n", {i, t - 1}
     end if
     g *= ( 2 - t )
     if t = 1 then
