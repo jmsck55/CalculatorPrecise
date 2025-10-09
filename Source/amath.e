@@ -43,9 +43,6 @@ global function MultInvAtom(atom x, atom last = 0)
   atom t, g, last
   g = 1 / x
   for i = 1 to AMATH_ITERS do
-    if g = last then
-      exit
-    end if
     t = g * x
     if AMATH_DEBUG then
       if round(t, accuracy) = 1 then
@@ -53,11 +50,14 @@ global function MultInvAtom(atom x, atom last = 0)
       end if
       printf(2, "calc [%d] corrected %g\n", {i, t - 1}
     end if
-    last = g
     g *= ( 2 - t )
     if t = 1 then
       exit
     end if
+    if g = last then
+      exit
+    end if
+    last = g
   end for
   return adjust_atom(g)
 end function
