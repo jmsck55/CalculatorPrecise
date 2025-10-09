@@ -1,6 +1,6 @@
 # CalculatorPrecise
 
-This repository uses software to fix the floating-point Pentium division bug, using Newton's method.
+This repository uses Newton's method coded in a software layer to fix the floating-point division Pentium bug in the floating-point math co-processor.
 
 More information can be found at:
 
