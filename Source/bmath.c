@@ -57,7 +57,8 @@ double MultInvl(long double x)
   t = g * x;
   if (t == 1.0L)
   {
-    return (double)g;
+    return adjust(g);
+    // return (double)g;
   }
   for (int i = 1; i <= AMATH_ITERS; i++)
   {
