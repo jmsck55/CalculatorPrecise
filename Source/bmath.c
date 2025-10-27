@@ -51,7 +51,7 @@ double MultInvl(long double x)
   long double t, g, last;
   g = 1.0L / x;
   t = g * x;
-  if ((double)t != 1.0)
+  if (t != 1.0L)
   {
     for (int i = 1; i <= AMATH_ITERS; i++)
     {
