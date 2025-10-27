@@ -50,6 +50,10 @@ double MultInvl(long double x)
 // performs 1/x
   long double t, g, last;
   g = 1.0L / x;
+  if (x == 0.0L)
+  {
+    return (double)g; // infinity
+  }
   t = g * x;
   if (t != 1.0L)
   {
