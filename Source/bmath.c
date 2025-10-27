@@ -55,19 +55,20 @@ double MultInvl(long double x)
     return (double)g; // infinity
   }
   t = g * x;
-  if (t != 1.0L)
+  if (t == 1.0L)
   {
-    for (int i = 1; i <= AMATH_ITERS; i++)
-    {
-      last = t;
-      g *= ( 2.0L - t );
-      if ((double)t == 1.0) {
-        break;
-      }
-      t = g * x;
-      if (t == last) {
-        break;
-      }
+    return (double)g;
+  }
+  for (int i = 1; i <= AMATH_ITERS; i++)
+  {
+    last = t;
+    g *= ( 2.0L - t );
+    if ((double)t == 1.0) {
+      break;
+    }
+    t = g * x;
+    if (t == last) {
+      break;
     }
   }
   return adjust(g);
