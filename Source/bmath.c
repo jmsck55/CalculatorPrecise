@@ -50,17 +50,20 @@ double MultInvl(long double x)
 // performs 1/x
   long double t, g, last;
   g = 1.0L / x;
-  last = 0.0L;
-  for (int i = 1; i <= AMATH_ITERS; i++)
+  t = g * x;
+  if ((double)t != 1.0)
   {
-    t = g * x;
-    if (t == last) {
-      break;
-    }
-    last = t;
-    g *= ( 2.0L - t );
-    if ((double)t == 1.0) {
-      break;
+    for (int i = 1; i <= AMATH_ITERS; i++)
+    {
+      last = t;
+      g *= ( 2.0L - t );
+      if ((double)t == 1.0) {
+        break;
+      }
+      t = g * x;
+      if (t == last) {
+        break;
+      }
     }
   }
   return adjust(g);
