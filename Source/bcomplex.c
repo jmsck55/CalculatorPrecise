@@ -5,151 +5,130 @@
 #include "bmath.h"
 #include <complex.h>
 
+
+double complex CMultInv(double complex n2)
+{
+// Reciprocal
+    // Eun a, b, c
+    // (a+bi)(a-bi) <=> a*a + b*b
+    // n2 = (a+bi)
+    // a = n2[1]
+    // b = n2[2]
+    // 1 / n2 <=> (a-bi) / (a*a + b*b)
+    // <=> (a / (a*a + b*b)) - (b / (a*a + b*b))i
+    // c = (a*a + b*b)
+    // <=> (a / c) - (b / c)i
+    double a, b, c, real, imag;
+    double complex n1;
+    a = creal(n2);
+    b = cimag(n2);
+    c = MultInvl((long double)((a * a) + (b * b)));
+    real = (a * c);
+    imag = -(b * c);
+    n1 = real + imag * I;
+    return n1;
+}
+
+double complex CDiv(double complex n1, double complex n2)
+{
+// correct!
+    return n1 * CMultInv(n2);
+}
+
+double CAbsoluteValue(double complex z)
+{
+// same as: ComplexModulus or ComplexMagnitude
+
+// Abs[z] == Sqrt[z Conjugate[z]]
+
+// abs(z) = sqrt(z * conj(z))
+// abs(x + iy) = sqrt((x + iy)(x - iy))
+
+// (x + iy)(x - iy) = x*x -x*iy +x*iy -iy*iy
+// x^2 - (iy)^2
+// x^2 + y^2
+
+// abs(x + iy) = sqrt(x^2 + y^2)
+
+    double a, b, r;
+    a = creal(z);
+    b = cimag(z);
+    r = Sqrt((a * a) + (b * b));
+    return r;
+}
+
+double complex CSqrt(double complex z)
+{
+// sqrt(x + iy) <=> (1/2) * sqrt(2) * [ sqrt( sqrt(x*x + y*y) + x )  +  i*sign(y) * sqrt( sqrt(x*x + y*y) - x ) ]
+  double x, y, a, b, c;
+  x = creal(z);
+  y = cimag(z);
+  c = Sqrt((x * x) + (y * y));
+  a = Sqrt(c + x);
+  b = Sqrt(c - x);
+  if (y < 0)
+  {
+    b = -(b);
+  }
+  z = (0.5 * Sqrt(2.0) * a) + (b * I);
+  return z;
+}
+
+double complex CExp(double complex z)
+{
+// ComplexExponent()
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    a = Exp(a);
+    r = (a * Cos(b)) + (a * Sin(b) * I);
+    return r;
+}
+
+double complex CLn(double complex z)
+{
+// Natural Logarithm
+// ln(z) = (ln(x^2 + y^2)/2) + arctan(y/x)i
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    r = (0.5 * Log((a * a) + (b * b))) + (ArcTan2(b, a) * I);
+    return r;
+}
+
+double complex CPower(double complex z, double complex raisedTo)
+{
+    double complex r;
+    r = CExp(raisedTo * CLn(z));
+    return r;
+}
+
+double complex CCos(double complex z)
+{
+// cos(z) = (cos(x) * cosh(y)) - (sin(x) * sinh(y))i
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    r = (Cos(a) * Cosh(b)) - (Sin(a) * Sinh(b) * I);
+    return r;
+}
 /*
-include amath.e
-include std/math.e
-
-global constant AREAL = 1, AIMAG = 2
-
-global type AComplex(sequence s)
-    return length(s) = 2 and atom(s[1]) and atom(s[2])
-end type
-
-global function CAdd(AComplex a, AComplex b)
-    return a + b
-end function
-
-global function CSum(sequence s)
-  AComplex r
-  r = {0, 0}
-  for i = 1 to length(s) do
-    r = CAdd(r, s[i])
-  end for
-  return r
-end function
-
-global function CNegateImag(AComplex a)
-    a[AIMAG] = -(a[AIMAG])
-    return a
-end function
-
-global function ComplexConjugate(AComplex z)
-    return CNegateImag(z)
-end function
-
-global function CMult(AComplex n1, AComplex n2)
-    -- n1 = (a+bi)
-    -- n2 = (c+di)
-    -- (a+bi)(c+di) <=> ac + adi + bci + bdii
-    -- <=> (ac - bd) + (ad + bc)i
-    sequence r
-    r = {0, 0}
-    r[AREAL] = n1[AREAL] * n2[AREAL] - n1[AIMAG] * n2[AIMAG]
-    r[AIMAG] = n1[AREAL] * n2[AIMAG] + n1[AIMAG] * n2[AREAL]
-    return r
-end function
-
-global function CMultInv(AComplex n2)
--- Reciprocal
-    -- Eun a, b, c
-    -- (a+bi)(a-bi) <=> a*a + b*b
-    -- n2 = (a+bi)
-    -- a = n2[1]
-    -- b = n2[2]
-    -- 1 / n2 <=> (a-bi) / (a*a + b*b)
-    -- <=> (a / (a*a + b*b)) - (b / (a*a + b*b))i
-    -- c = (a*a + b*b)
-    -- <=> (a / c) - (b / c)i
-    atom a, b, c, real, imag
-    a = n2[AREAL]
-    b = n2[AIMAG]
-    c = MultInvAtom((a * a) + (b * b))
-    real = (a * c)
-    imag = -(b * c)
-    return {real, imag}
-end function
-
-global function CDiv(AComplex n1, AComplex n2)
--- correct!
-    return CMult(n1, CMultInv(n2))
-end function
-
-global function CAbsoluteValue(AComplex z)
--- same as: ComplexModulus or ComplexMagnitude
-
--- Abs[z] == Sqrt[z Conjugate[z]]
-
--- abs(z) = sqrt(z * conj(z))
--- abs(x + iy) = sqrt((x + iy)(x - iy))
-
--- (x + iy)(x - iy) = x*x -x*iy +x*iy -iy*iy
--- x^2 - (iy)^2
--- x^2 + y^2
-
--- abs(x + iy) = sqrt(x^2 + y^2)
-
-    atom r
-    r = z[AREAL] * z[AREAL] + z[AIMAG] * z[AIMAG]
-    r = SqrtAtom(r)
-    return r
-end function
-
-global function CSqrt(AComplex z)
--- sqrt(x + iy) <=> (1/2) * sqrt(2) * [ sqrt( sqrt(x*x + y*y) + x )  +  i*sign(y) * sqrt( sqrt(x*x + y*y) - x ) ]
-  atom x, y, a, b, c
-  x = z[AREAL]
-  y = z[AIMAG]
-  c = SqrtAtom(x * x + y * y)
-  a = SqrtAtom(c + x)
-  b = SqrtAtom(c - x)
-  if y < 0 then
-    b = -(b)
-  end if
-  z = (SqrtAtom(2) / 2) * {a, b}
-  return z
-end function
-
-global function CExp(AComplex z)
--- ComplexExponent()
-    sequence r
-    r = repeat(ExpAtom(z[AREAL]), 2)
-    r[AREAL] *= CosAtom(z[AIMAG])
-    r[AIMAG] *= SinAtom(z[AIMAG])
-    return r
-end function
-
-global function CLn(AComplex z)
--- Natural Logarithm
--- ln(z) = (ln(x^2 + y^2)/2) + arctan(y/x)i
-    sequence r
-    r = {0, 0}
-    r[AREAL] = LnAtom(z[AREAL] * z[AREAL] + z[AIMAG] * z[AIMAG]) / 2
-    r[AIMAG] = ArcTan2Atom(z[AIMAG], z[AREAL])
-    return r
-end function
-
-global function CPower(AComplex z, AComplex raisedTo)
-    return CExp(CMult(raisedTo, CLn(z)))
-end function
-
-global function CCos(AComplex z)
--- cos(z) = (cos(x) * cosh(y)) - (sin(x) * sinh(y))i
-    sequence r
-    r = {0, 0}
-    r[AREAL] = CosAtom(z[AREAL]) * CoshAtom(z[AIMAG])
-    r[AIMAG] = -(SinAtom(z[AREAL]) * SinhAtom(z[AIMAG]))
-    return r
-end function
-
-global function CCosh(AComplex z)
--- Cosine hyperbolic (cosh)
--- cosh(z) = (cosh(x) * cos(y)) - (sinh(x) * sin(y))i
-    sequence r
-    r = {0, 0}
+double complex CCosh(double complex z)
+{
+// Cosine hyperbolic (cosh)
+// cosh(z) = (cosh(x) * cos(y)) - (sinh(x) * sin(y))i
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    
     r[AREAL] = CoshAtom(z[AREAL]) * EunCos(z[AIMAG])
     r[AIMAG] = -(SinhAtom(z[AREAL]) * SinAtom(z[AIMAG]))
     return r
-end function
+}
 
 global function CSin(AComplex z)
 -- sin(z) = (sin(x) * cosh(y)) + (cos(x) * sinh(y))i
