@@ -2,6 +2,10 @@
 -- acomplex.e, accuracate complex calculations using sequences of two atoms for real and imaginary parts.
 -- uses Newton's method.
 
+-- Check your work twice before trusting it.
+-- When in doubt about formulas, use WolframAlpha:
+-- https://www.wolframalpha.com/
+
 include amath.e
 include std/math.e
 
