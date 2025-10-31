@@ -91,6 +91,11 @@ double Divl(long double n, long double d)
   return adjust(n);
 }
 
+double Div(double n, double d)
+{
+  return Divl((long double)n, (long double)d);
+}
+
 double Round(double a, double precision = 1)
 {
     long double b;
