@@ -142,7 +142,7 @@ global function CCosh(AComplex z)
 -- cosh(z) = (cosh(x) * cos(y)) - (sinh(x) * sin(y))i
     sequence r
     r = {0, 0}
-    r[AREAL] = CoshAtom(z[AREAL]) * EunCos(z[AIMAG])
+    r[AREAL] = CoshAtom(z[AREAL]) * CosAtom(z[AIMAG])
     r[AIMAG] = -(SinhAtom(z[AREAL]) * SinAtom(z[AIMAG]))
     return r
 end function

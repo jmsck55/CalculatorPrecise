@@ -7,6 +7,7 @@
 
 // Uses C99 version of math.h
 #include <math.h>
+#include "bmath.h"
 
 // constant accuracy = power(2, 52) -- question
 
@@ -88,6 +89,11 @@ double Divl(long double n, long double d)
   }
   n *= (long double)MultInvl(d);
   return adjust(n);
+}
+
+double Div(double n, double d)
+{
+  return Divl((long double)n, (long double)d);
 }
 
 double Round(double a, double precision = 1)
