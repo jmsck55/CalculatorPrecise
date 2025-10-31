@@ -203,7 +203,7 @@ global function CSinh(AComplex z)
     sequence r
     r = {0, 0}
     r[AREAL] = SinhAtom(z[AREAL]) * CosAtom(z[AIMAG])
-    r[AIMAG] = -(CoshAtom(z[AREAL]) * SinAtom(z[AIMAG]))
+    r[AIMAG] = CoshAtom(z[AREAL]) * SinAtom(z[AIMAG]) -- ? plus or minus
     return r
 end function
 
@@ -216,7 +216,7 @@ global function CCosh(AComplex z)
     sequence r
     r = {0, 0}
     r[AREAL] = CoshAtom(z[AREAL]) * CosAtom(z[AIMAG])
-    r[AIMAG] = -(SinhAtom(z[AREAL]) * SinAtom(z[AIMAG]))
+    r[AIMAG] = SinhAtom(z[AREAL]) * SinAtom(z[AIMAG]) -- ? plus or minus
     return r
 end function
 

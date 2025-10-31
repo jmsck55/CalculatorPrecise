@@ -179,7 +179,7 @@ double complex CSinh(double complex z)
     double a, b;
     a = creal(z);
     b = cimag(z);
-    r = (Sinh(a) * Cos(b)) - (Cosh(a) * Sin(b) * I); // ? plus or minus?
+    r = (Sinh(a) * Cos(b)) + (Cosh(a) * Sin(b) * I); // plus or minus?
     return r;
 }
 
@@ -194,7 +194,7 @@ double complex CCosh(double complex z)
     double a, b;
     a = creal(z);
     b = cimag(z);
-    r = (Cosh(a) * Cos(b)) - (Sinh(a) * Sin(b) * I); // plus or minus?
+    r = (Cosh(a) * Cos(b)) + (Sinh(a) * Sin(b) * I); // plus or minus?
     return r;
 }
 
