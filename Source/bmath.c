@@ -7,6 +7,7 @@
 
 // Uses C99 version of math.h
 #include <math.h>
+#include "bmath.h"
 
 // constant accuracy = power(2, 52) -- question
 
