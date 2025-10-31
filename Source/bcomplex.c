@@ -86,7 +86,7 @@ double complex CExp(double complex z)
     return r;
 }
 
-double complex CLn(double complex z)
+double complex CLog(double complex z)
 {
 // Natural Logarithm
 // ln(z) = (ln(x^2 + y^2)/2) + arctan(y/x)i
@@ -101,7 +101,7 @@ double complex CLn(double complex z)
 double complex CPower(double complex z, double complex raisedTo)
 {
     double complex r;
-    r = CExp(raisedTo * CLn(z));
+    r = CExp(raisedTo * CLog(z));
     return r;
 }
 
@@ -115,7 +115,7 @@ double complex CCos(double complex z)
     r = (Cos(a) * Cosh(b)) - (Sin(a) * Sinh(b) * I);
     return r;
 }
-/*
+
 double complex CCosh(double complex z)
 {
 // Cosine hyperbolic (cosh)
@@ -124,73 +124,73 @@ double complex CCosh(double complex z)
     double a, b;
     a = creal(z);
     b = cimag(z);
-    
-    r[AREAL] = CoshAtom(z[AREAL]) * EunCos(z[AIMAG])
-    r[AIMAG] = -(SinhAtom(z[AREAL]) * SinAtom(z[AIMAG]))
-    return r
+    r = Cosh(a) * Cos(b) - (Sinh(a) * Sin(b) * I);
+    return r;
 }
 
-global function CSin(AComplex z)
--- sin(z) = (sin(x) * cosh(y)) + (cos(x) * sinh(y))i
-    sequence r
-    r = {0, 0}
-    r[AREAL] = SinAtom(z[AREAL]) * CoshAtom(z[AIMAG])
-    r[AIMAG] = CosAtom(z[AREAL]) * SinhAtom(z[AIMAG])
-    return r
-end function
+double complex CSin(double complex z)
+{
+// sin(z) = (sin(x) * cosh(y)) + (cos(x) * sinh(y))i
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    r = (Sin(a) * Cosh(b)) + (Cos(a) * Sinh(b) * I);
+    return r;
+}
 
-global function CSinh(AComplex z)
--- Sinus hyperbolic (sinh)
--- sinh(z) = (sinh(x) * cos(y)) - (cosh(x) * sin(y))i
-    sequence r
-    r = {0, 0}
-    r[AREAL] = SinhAtom(z[AREAL]) * CosAtom(z[AIMAG])
-    r[AIMAG] = -(CoshAtom(z[AREAL]) * SinAtom(z[AIMAG]))
-    return r
-end function
+double complex CSinh(double complex z)
+{
+// Sinus hyperbolic (sinh)
+// sinh(z) = (sinh(x) * cos(y)) - (cosh(x) * sin(y))i
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    r = (Sinh(a) * Cos(b)) - (Cosh(a) * Sin(b) * I);
+    return r;
+}
 
-global function CTan(AComplex z)
--- z = Real(x) + Imaginary(y)
--- f(x,y) = cos(2x) + cosh(2y)
--- tan(z) = (sin(2x)/f(x,y)) + (sinh(2y)/f(x,y))i
-  atom x, y, f
-  sequence r
-  x = z[AREAL] * 2
-  y = z[AIMAG] * 2
-  f = CosAtom(x) + CoshAtom(y)
-  r = {0, 0}
-  r[AREAL] = DivAtom(SinAtom(x), f)
-  r[AIMAG] = DivAtom(SinhAtom(y), f)
-  return r
-end function
+double complex CTan(double complex z)
+{
+// z = Real(x) + Imaginary(y)
+// f(x,y) = cos(2x) + cosh(2y)
+// tan(z) = (sin(2x)/f(x,y)) + (sinh(2y)/f(x,y))i
+  double complex r;
+  double x, y, f;
+  x = creal(z) * 2.0;
+  y = cimag(z) * 2.0;
+  f = Cos(x) + Cosh(y);
+  r = Div(Sin(x), f) + (Div(Sinh(y), f) * I);
+  return r;
+}
 
-global function CArcTan(AComplex z)
--- Given: arctan(x + iy), z = x + iy
--- (1/2) * i * log(1 - i(x + iy)) - (1/2) * i * log(1 + i(x + iy))
--- (1/2) * i * (log(-ix + y + 1) - log(ix - y + 1))
--- (1/2) * i * (log(1 - i * z) - log(1 + i * z))
+double complex CArcTan(double complex z)
+{
+// Given: arctan(x + iy), z = x + iy
+// (1/2) * i * log(1 - i(x + iy)) - (1/2) * i * log(1 + i(x + iy))
+// (1/2) * i * (log(-ix + y + 1) - log(ix - y + 1))
+// (1/2) * i * (log(1 - i * z) - log(1 + i * z))
+  double complex r;
+  r = (0.5 * I) * (CLog(1.0 - (I * z)) - CLog(1.0 + (I * z)));
+  return r;
+}
 
-  sequence a, b, r
-  a = CMult({0, 1}, z)
-  b = CAdd(CLn(CAdd({1, 0}, -(a))), - CLn(CAdd({1, 0}, a)))
-  r = CMult({0, 0.5}, b)
-  return r
-end function
+double complex * CQuadraticEquation(double complex a, double complex b, double complex c)
+{
+    // The quadratic equation produces two answers (the answers may be the same)
+    // ax^2 + bx + c
+    // f(a,b,c) = (-b +-sqrt(b*b - 4*a*c)) / (2*a)
+    // answer[0] = ((-b + sqrt(b*b - 4*a*c)) / (2*a))
+    // answer[1] = ((-b - sqrt(b*b - 4*a*c)) / (2*a))
+    double complex r[2];
+    double complex s, t;
+    t = (b * b) - (4.0 * a * c);
+    s = CSqrt(t);
+    t = 2.0 * a;
+    r[0] = CDiv((-b) + s, t);
+    r[1] = CDiv((-b) - s, t);
+    return r;
+}
 
-global function CQuadraticEquation(AComplex a, AComplex b, AComplex c)
-    -- The quadratic equation produces two answers (the answers may be the same)
-    -- ax^2 + bx + c
-    -- f(a,b,c) = (-b +-sqrt(b*b - 4*a*c)) / (2*a)
-    -- answer[0] = ((-b + sqrt(b*b - 4*a*c)) / (2*a))
-    -- answer[1] = ((-b - sqrt(b*b - 4*a*c)) / (2*a))
-    --
-    sequence r, s, t
-    t = CMult(b, b) - 4 * CMult(a, c))
-    s = CSqrt(t)
-    r = {0, 0}
-    r[1] = CDiv(-b + s, 2 * a)
-    r[2] = CDiv(-b - s, 2 * a)
-    return r
-end function
-*/
 // end of file.
