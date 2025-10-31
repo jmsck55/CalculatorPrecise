@@ -128,24 +128,12 @@ global function CPower(AComplex z, AComplex raisedTo)
     return CExp(CMult(raisedTo, CLn(z)))
 end function
 
-global function CCos(AComplex z)
--- cos(z) = (cos(x) * cosh(y)) - (sin(x) * sinh(y))i
-    sequence r
-    r = {0, 0}
-    r[AREAL] = CosAtom(z[AREAL]) * CoshAtom(z[AIMAG])
-    r[AIMAG] = -(SinAtom(z[AREAL]) * SinhAtom(z[AIMAG]))
-    return r
-end function
+-- Complex Trig functions
 
-global function CCosh(AComplex z)
--- Cosine hyperbolic (cosh)
--- cosh(z) = (cosh(x) * cos(y)) - (sinh(x) * sin(y))i
-    sequence r
-    r = {0, 0}
-    r[AREAL] = CoshAtom(z[AREAL]) * CosAtom(z[AIMAG])
-    r[AIMAG] = -(SinhAtom(z[AREAL]) * SinAtom(z[AIMAG]))
-    return r
-end function
+-- For z = x + iy,
+
+-- sin(z) = sin(x) * cosh(y) + i * cos(x) * sinh(y)
+-- {\displaystyle \sin {z}=\sin {x}\cosh {y}+i\cos {x}\sinh {y}}
 
 global function CSin(AComplex z)
 -- sin(z) = (sin(x) * cosh(y)) + (cos(x) * sinh(y))i
@@ -156,15 +144,20 @@ global function CSin(AComplex z)
     return r
 end function
 
-global function CSinh(AComplex z)
--- Sinus hyperbolic (sinh)
--- sinh(z) = (sinh(x) * cos(y)) - (cosh(x) * sin(y))i
+-- cos(z) = cos(x) * cosh(y) − i * sin(x) * sinh(y)
+-- {\displaystyle \cos {z}=\cos {x}\cosh {y}-i\sin {x}\sinh {y}}
+
+global function CCos(AComplex z)
+-- cos(z) = (cos(x) * cosh(y)) - (sin(x) * sinh(y))i
     sequence r
     r = {0, 0}
-    r[AREAL] = SinhAtom(z[AREAL]) * CosAtom(z[AIMAG])
-    r[AIMAG] = -(CoshAtom(z[AREAL]) * SinAtom(z[AIMAG]))
+    r[AREAL] = CosAtom(z[AREAL]) * CoshAtom(z[AIMAG])
+    r[AIMAG] = -(SinAtom(z[AREAL]) * SinhAtom(z[AIMAG]))
     return r
 end function
+
+-- tan(z) = (tan(x) + i * tanh(y)) / (1 − i * tan(x) * tanh(y))
+-- {\displaystyle \tan {z}={\frac {\tan {x}+i\tanh {y}}{1-i\tan {x}\tanh {y}}}}
 
 global function CTan(AComplex z)
 -- z = Real(x) + Imaginary(y)
@@ -180,6 +173,93 @@ global function CTan(AComplex z)
   r[AIMAG] = DivAtom(SinhAtom(y), f)
   return r
 end function
+
+-- cot(z) = −((1 + i * cot(x) * coth(y)) / (cot(x) − i * coth(y)))
+-- {\displaystyle \cot {z}=-{\frac {1+i\cot {x}\coth {y}}{\cot {x}-i\coth {y}}}}
+
+global function CCot(AComplex z)
+  atom a, b
+  sequence r, n, d
+  a = z[AREAL]
+  b = z[AIMAG]
+  a = CotAtom(a)
+  b = CothAtom(b)
+  n = {0, 0}
+  n[AREAL] = 1
+  n[AIMAG] = a * b
+  d = {0, 0}
+  d[AREAL] = a
+  d[AIMAG] = - (b)
+  r = - CDiv(n, d)
+  return r
+end function
+
+-- sinh(z) = sinh(x) * cos(y) + i * cosh(x) * sin(y)
+-- {\displaystyle \sinh {z}=\sinh {x}\cos {y}+i\cosh {x}\sin {y}}
+
+global function CSinh(AComplex z)
+-- Sinus hyperbolic (sinh)
+-- sinh(z) = (sinh(x) * cos(y)) - (cosh(x) * sin(y))i
+    sequence r
+    r = {0, 0}
+    r[AREAL] = SinhAtom(z[AREAL]) * CosAtom(z[AIMAG])
+    r[AIMAG] = -(CoshAtom(z[AREAL]) * SinAtom(z[AIMAG]))
+    return r
+end function
+
+-- cosh(z) = cosh(x) * cos(y) + i * sinh(x) * sin(y)
+-- {\displaystyle \cosh {z}=\cosh {x}\cos {y}+i\sinh {x}\sin {y}}
+
+global function CCosh(AComplex z)
+-- Cosine hyperbolic (cosh)
+-- cosh(z) = (cosh(x) * cos(y)) - (sinh(x) * sin(y))i
+    sequence r
+    r = {0, 0}
+    r[AREAL] = CoshAtom(z[AREAL]) * CosAtom(z[AIMAG])
+    r[AIMAG] = -(SinhAtom(z[AREAL]) * SinAtom(z[AIMAG]))
+    return r
+end function
+
+-- tanh(z) = (tanh(x) + i * tan(y)) / (1 + i * tanh(x) * tan(y))
+// {\displaystyle \tanh {z}={\frac {\tanh {x}+i\tan {y}}{1+i\tanh {x}\tan {y}}}}
+
+global function CTanh(AComplex z)
+  atom a, b
+  sequence r, n, d
+  a = z[AREAL]
+  b = z[AIMAG]
+  a = TanhAtom(a)
+  b = TanAtom(b)
+  n = {0, 0}
+  n[AREAL] = a
+  n[AIMAG] = b
+  d = {0, 0}
+  d[AREAL] = 1
+  d[AIMAG] = a * b
+  r = CDiv(n, d)
+  return r
+end function
+
+-- coth(z) = (1 − i * coth(x) * cot(y)) / (coth(x) − i * cot(y))
+-- {\displaystyle \coth {z}={\frac {1-i\coth {x}\cot {y}}{\coth {x}-i\cot {y}}}}
+
+global function CCoth(AComplex z)
+  atom a, b
+  sequence r, n, d
+  a = z[AREAL]
+  b = z[AIMAG]
+  a = CothAtom(a)
+  b = CotAtom(b)
+  n = {0, 0}
+  n[AREAL] = 1
+  n[AIMAG] = - (a * b)
+  d = {0, 0}
+  d[AREAL] = a
+  d[AIMAG] = - (b)
+  r = CDiv(n, d)
+  return r
+end function
+
 
 global function CArcTan(AComplex z)
 -- Given: arctan(x + iy), z = x + iy
