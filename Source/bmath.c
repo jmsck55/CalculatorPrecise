@@ -50,7 +50,7 @@ double MultInvl(long double x)
 // performs 1/x
   long double t, g, last;
   g = 1.0L / x;
-  if (x == 0.0L)
+  if ((double)x == 0.0)
   {
     return (double)g; // infinity
   }
