@@ -20,19 +20,24 @@ double complex CLog(double complex z);
 
 double complex CPower(double complex z, double complex raisedTo);
 
+double complex CSin(double complex z);
+
 double complex CCos(double complex z);
 
-double complex CCosh(double complex z);
+double complex CTan(double complex z);
 
-double complex CSin(double complex z);
+double complex CCot(double complex z);
 
 double complex CSinh(double complex z);
 
-double complex CTan(double complex z);
+double complex CCosh(double complex z);
+
+double complex CTanh(double complex z);
+
+double complex CCoth(double complex z);
 
 double complex CArcTan(double complex z);
 
 double complex * CQuadraticEquation(double complex a, double complex b, double complex c);
-
 
 // end of file.
