@@ -27,6 +27,8 @@ double MultInvl(long double x);
 
 double Divl(long double n, long double d);
 
+double Div(double n, double d);
+
 double Round(double a, double precision = 1);
 
 
