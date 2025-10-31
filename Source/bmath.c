@@ -612,7 +612,7 @@ double ArcSech(double a)
     return r;
 }
 
-double ArcSinhAtom(double a)
+double ArcSinh(double a)
 {
 // arcsinh(x) = ln(x + sqrt(x^2 + 1))
     double r;
