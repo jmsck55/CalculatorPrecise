@@ -105,28 +105,10 @@ double complex CPower(double complex z, double complex raisedTo)
     return r;
 }
 
-double complex CCos(double complex z)
-{
-// cos(z) = (cos(x) * cosh(y)) - (sin(x) * sinh(y))i
-    double complex r;
-    double a, b;
-    a = creal(z);
-    b = cimag(z);
-    r = (Cos(a) * Cosh(b)) - (Sin(a) * Sinh(b) * I);
-    return r;
-}
+// For z = x + iy,
 
-double complex CCosh(double complex z)
-{
-// Cosine hyperbolic (cosh)
-// cosh(z) = (cosh(x) * cos(y)) - (sinh(x) * sin(y))i
-    double complex r;
-    double a, b;
-    a = creal(z);
-    b = cimag(z);
-    r = Cosh(a) * Cos(b) - (Sinh(a) * Sin(b) * I);
-    return r;
-}
+// sin(z) = sin(x) * cosh(y) + i * cos(x) * sinh(y)
+// {\displaystyle \sin {z}=\sin {x}\cosh {y}+i\cos {x}\sinh {y}}
 
 double complex CSin(double complex z)
 {
@@ -139,17 +121,22 @@ double complex CSin(double complex z)
     return r;
 }
 
-double complex CSinh(double complex z)
+// cos(z) = cos(x) * cosh(y) − i * sin(x) * sinh(y)
+// {\displaystyle \cos {z}=\cos {x}\cosh {y}-i\sin {x}\sinh {y}}
+
+double complex CCos(double complex z)
 {
-// Sinus hyperbolic (sinh)
-// sinh(z) = (sinh(x) * cos(y)) - (cosh(x) * sin(y))i
+// cos(z) = (cos(x) * cosh(y)) - (sin(x) * sinh(y))i
     double complex r;
     double a, b;
     a = creal(z);
     b = cimag(z);
-    r = (Sinh(a) * Cos(b)) - (Cosh(a) * Sin(b) * I);
+    r = (Cos(a) * Cosh(b)) - (Sin(a) * Sinh(b) * I);
     return r;
 }
+
+// tan(z) = (tan(x) + i * tanh(y)) / (1 − i * tan(x) * tanh(y))
+// {\displaystyle \tan {z}={\frac {\tan {x}+i\tanh {y}}{1-i\tan {x}\tanh {y}}}}
 
 double complex CTan(double complex z)
 {
@@ -163,6 +150,84 @@ double complex CTan(double complex z)
   f = Cos(x) + Cosh(y);
   r = Div(Sin(x), f) + (Div(Sinh(y), f) * I);
   return r;
+}
+
+// cot(z) = −((1 + i * cot(x) * coth(y)) / (cot(x) − i * coth(y)))
+// {\displaystyle \cot {z}=-{\frac {1+i\cot {x}\coth {y}}{\cot {x}-i\coth {y}}}}
+
+double complex CCot(double complex z)
+{
+    // cot(z) = −((1 + i * cot(x) * coth(y)) / (cot(x) − i * coth(y)))
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    a = Cot(a);
+    b = Coth(b);
+    r = - CDiv(1.0 + I * a * b, a - I * b);
+    return r;
+}
+
+// sinh(z) = sinh(x) * cos(y) + i * cosh(x) * sin(y)
+// {\displaystyle \sinh {z}=\sinh {x}\cos {y}+i\cosh {x}\sin {y}}
+
+double complex CSinh(double complex z)
+{
+// Sinus hyperbolic (sinh)
+// sinh(z) = (sinh(x) * cos(y)) - (cosh(x) * sin(y))i
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    r = (Sinh(a) * Cos(b)) - (Cosh(a) * Sin(b) * I); // ? plus or minus?
+    return r;
+}
+
+// cosh(z) = cosh(x) * cos(y) + i * sinh(x) * sin(y)
+// {\displaystyle \cosh {z}=\cosh {x}\cos {y}+i\sinh {x}\sin {y}}
+
+double complex CCosh(double complex z)
+{
+// Cosine hyperbolic (cosh)
+// cosh(z) = (cosh(x) * cos(y)) - (sinh(x) * sin(y))i
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    r = (Cosh(a) * Cos(b)) - (Sinh(a) * Sin(b) * I); // plus or minus?
+    return r;
+}
+
+// tanh(z) = (tanh(x) + i * tan(y)) / (1 + i * tanh(x) * tan(y))
+// {\displaystyle \tanh {z}={\frac {\tanh {x}+i\tan {y}}{1+i\tanh {x}\tan {y}}}}
+
+double complex CTanh(double complex z)
+{
+    // tanh(z) = (tanh(x) + i * tan(y)) / (1 + i * tanh(x) * tan(y))
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    a = Tanh(a);
+    b = Tan(b);
+    r = CDiv(a + I * b, 1.0 + I * a * b);
+    return r;
+}
+
+// coth(z) = (1 − i * coth(x) * cot(y)) / (coth(x) − i * cot(y))
+// {\displaystyle \coth {z}={\frac {1-i\coth {x}\cot {y}}{\coth {x}-i\cot {y}}}}
+
+double complex CCoth(double complex z)
+{
+    // coth(z) = (1 − i * coth(x) * cot(y)) / (coth(x) − i * cot(y))
+    double complex r;
+    double a, b;
+    a = creal(z);
+    b = cimag(z);
+    a = Coth(a);
+    b = Cot(b);
+    r = CDiv(1.0 - I * a * b, a - I * b);
+    return r;
 }
 
 double complex CArcTan(double complex z)
