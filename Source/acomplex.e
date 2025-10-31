@@ -194,6 +194,10 @@ global function CCot(AComplex z)
   return r
 end function
 
+-- Hyperbolic Trig functions
+-- more information on this site:
+-- https://mathworld.wolfram.com/HyperbolicFunctions.html
+
 -- sinh(z) = sinh(x) * cos(y) + i * cosh(x) * sin(y)
 -- {\displaystyle \sinh {z}=\sinh {x}\cos {y}+i\cosh {x}\sin {y}}
 
