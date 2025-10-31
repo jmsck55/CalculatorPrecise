@@ -1,4 +1,4 @@
-// Copyright (c) 2025 James Cook
+y// Copyright (c) 2025 James Cook
 // bmath.h
 // For the header.
 // Description: Accurate math routines, using Newton's method.
@@ -125,7 +125,7 @@ double ArcSec(double a);
 
 double ArcSech(double a);
 
-double ArcSinhAtom(double a);
+double ArcSinh(double a);
 
 double ArcTanh(double a);
 
