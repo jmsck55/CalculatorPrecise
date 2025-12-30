@@ -157,7 +157,7 @@ double Exp(double x)
 
 // Raw function: Natural Logarithm
 
-const double ACONST_E = ExpAtom(1.0);
+const double ACONST_E = Exp(1.0);
 
 double Log(double a)
 {
@@ -568,7 +568,7 @@ double ArcCoth(double a)
         exit(1);
     }
     r = Divl((long double)(a + 1.0), (long double)(a - 1.0));
-    r = Divl((long double)LnAtom(r), (long double)2.0);
+    r = Divl((long double)Log(r), (long double)2.0);
     return r;
 }
 
@@ -703,5 +703,4 @@ double DegreesToRadians(double d)
     return r;
 }
 
-// end of file.
-
+s 
