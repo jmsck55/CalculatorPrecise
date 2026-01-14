@@ -12,7 +12,7 @@ y// Copyright (c) 2025 James Cook
 
 // constant accuracy = power(2, 52) -- question
 
-#define BMATH_ITERS 1000000
+#define BMATH_ITERS 10000000
 
 #define RoundDownIf 3
 #define RoundUpIf 4
