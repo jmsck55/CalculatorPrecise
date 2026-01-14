@@ -49,8 +49,8 @@ double adjust(long double g)
 double MultInvl(long double x)
 {
 // performs 1/x
-  long double t, g, r;
-  double a, b;
+  long double t, g;
+  double r, a, b, c;
   g = 1.0L / x;
   if ((double)x == 0.0)
   {
@@ -62,22 +62,24 @@ double MultInvl(long double x)
     return adjust(g);
     // return (double)g;
   }
+  r = 0.0;
   for (int i = 1; i <= BMATH_ITERS; i++)
   {
     g *= ( 2.0L - t );
-    r = t;
     if (r == 1.0) {
       break;
     }
     t = g * x;
-    if (t == r) {
+    c = adjust(t);
+    if (c == r) {
       break;
     }
+    r = c;
     if (i > 1000000) {
-      if ((double)r == a) {
+      if (r == a) {
         break;
       }
-      if ((double)r == b) {
+      if (r == b) {
         break;
       }
       b = a;
