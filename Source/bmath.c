@@ -50,7 +50,7 @@ double MultInvl(long double x)
 {
 // performs 1/x
   long double t, g;
-  double r, a, b, c;
+  double n, r, a, b, c;
   g = 1.0L / x;
   if ((double)x == 0.0)
   {
@@ -63,6 +63,9 @@ double MultInvl(long double x)
     // return (double)g;
   }
   r = 0.0;
+  a = 0.0;
+  b = 0.0;
+  c = 0.0;
   for (int i = 1; i <= BMATH_ITERS; i++)
   {
     g *= ( 2.0L - t );
@@ -70,18 +73,21 @@ double MultInvl(long double x)
       break;
     }
     t = g * x;
-    c = adjust(t);
-    if (c == r) {
+    n = adjust(t);
+    if (n == r) {
       break;
     }
-    r = c;
-    if (i > 1000000) {
-      if (r == a) {
+    if (i > 10) {
+      if (n == a) {
         break;
       }
-      if (r == b) {
+      if (n == b) {
         break;
       }
+      if (n == c) {
+        break;
+      }
+      c = b;
       b = a;
       a = r;
     }
