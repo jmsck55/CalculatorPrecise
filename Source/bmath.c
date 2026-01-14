@@ -49,7 +49,8 @@ double adjust(long double g)
 double MultInvl(long double x)
 {
 // performs 1/x
-  long double t, g, last;
+  long double t, g, r;
+  double a, b;
   g = 1.0L / x;
   if ((double)x == 0.0)
   {
@@ -61,16 +62,26 @@ double MultInvl(long double x)
     return adjust(g);
     // return (double)g;
   }
-  for (int i = 1; i <= AMATH_ITERS; i++)
+  for (int i = 1; i <= BMATH_ITERS; i++)
   {
-    last = t;
     g *= ( 2.0L - t );
-    if ((double)t == 1.0) {
+    r = t;
+    if (r == 1.0) {
       break;
     }
     t = g * x;
-    if (t == last) {
+    if (t == r) {
       break;
+    }
+    if (i > 1000000) {
+      if ((double)r == a) {
+        break;
+      }
+      if ((double)r == b) {
+        break;
+      }
+      b = a;
+      a = r;
     }
   }
   return adjust(g);
