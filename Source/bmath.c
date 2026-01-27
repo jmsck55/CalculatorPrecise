@@ -722,4 +722,3 @@ double DegreesToRadians(double d)
     return r;
 }
 
-s 
