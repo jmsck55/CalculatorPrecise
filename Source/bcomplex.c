@@ -3,8 +3,7 @@
 // uses Newton's method.
 
 #include "bmath.h"
-#include <complex.h>
-
+#include "bcomplex.h"
 
 double complex CMultInv(double complex n2)
 {
