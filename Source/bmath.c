@@ -121,7 +121,7 @@ double Round(double a, double precision = 1)
     b = (long double)precision * (long double)a;
     b += 0.5L;
     b = floorl(b);
-    return = Divl(b, (long double)precision);
+    return Divl(b, (long double)precision);
 }
 
 
