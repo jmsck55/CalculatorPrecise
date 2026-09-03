@@ -1,4 +1,4 @@
-y// Copyright (c) 2025 James Cook
+// Copyright (c) 2025 James Cook
 // bmath.h
 // For the header.
 // Description: Accurate math routines, using Newton's method.
