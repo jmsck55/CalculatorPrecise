@@ -104,7 +104,7 @@ double Divl(long double n, long double d)
     return adjust(n);
   }
   if (d == 2.0L) {
-    return (double)(n >> 1);
+    return (double)((double)n / 2.0);
   }
   n *= (long double)MultInvl(d);
   return adjust(n);
