@@ -31,7 +31,7 @@ double adjust(long double g)
     (((adjustMethod == 3) or (adjustMethod == 0)) and (c > g))
     ) // round down. // if (fasbl(c) > fasbl(g)) // round to zero.
   {
-    g <<= 1; // g *= 2;
+    g *= 2; // g <<= 1;
     g -= c;
     b = (double)g;
   }
@@ -39,7 +39,7 @@ double adjust(long double g)
     (((adjustMethod == 4) or (adjustMethod == 0)) and (c < g))
     ) // round up.
   {
-    c <<= 1;
+    c *= 2; // c <<= 1;
     c -= g;
     b = (double)c;
   }
