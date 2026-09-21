@@ -19,7 +19,7 @@
 #define RoundToZero 0
 #define RoundNot 15
 
-static int adjustMethod;
+static int adjustMethod = RoundToZero;
 
 double adjust(long double g);
 
@@ -45,7 +45,7 @@ double Exp(double x);
 
 // Raw function: Natural Logarithm
 
-const double ACONST_E;
+void init_log();
 
 double Log(double a);
 
@@ -75,7 +75,7 @@ double Tan(double a);
 
 double ArcTan(double a);
 
-const double ACONST_PI;
+void init_trig();
 
 double ArcTan2(double y, double x);
 
