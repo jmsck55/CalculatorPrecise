@@ -51,7 +51,7 @@ double Log(double a);
 
 double Power(double base, double raisedTo);
 
-double GeneralRoot(double rooted, double nyNumber);
+double GeneralRoot(double rooted, double anyNumber);
 
 // Trig functions
 
