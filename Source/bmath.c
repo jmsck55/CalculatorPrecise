@@ -274,7 +274,7 @@ double Power(double base, double raisedTo)
     return r;
 }
 
-double GeneralRoot(double rooted, double nyNumber)
+double GeneralRoot(double rooted, double anyNumber)
 {
     double r;
     r = Power(rooted, MultInvl((long double)anyNumber));
