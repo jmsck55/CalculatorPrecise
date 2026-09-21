@@ -291,6 +291,22 @@ double GeneralRoot(double rooted, double anyNumber)
 // arcsin
 // ACONST_PI
 
+static double ACONST_PI = 0.0;
+
+void init_trig()
+{
+    ACONST_PI = 4.0 * ArcTan(1.0); // 4 * arctan(1)
+}
+
+double GetPI()
+{
+    if (ACONST_PI == 0.0)
+    {
+      init_trig();
+    }
+    return ACONST_PI;
+}
+
 double Cos(double a)
 {
 // Range: -PI/2 to PI/2, exclusive
@@ -419,22 +435,6 @@ double ArcTan(double a)
   }
   r = Divl((long double)a, (long double)b) * s;
   return r;
-}
-
-static double ACONST_PI = 0.0;
-
-void init_trig()
-{
-    ACONST_PI = 4.0 * ArcTan(1.0); // 4 * arctan(1)
-}
-
-double GetPI()
-{
-    if (ACONST_PI == 0.0)
-    {
-      init_trig();
-    }
-    return ACONST_PI;
 }
 
 double ArcTan2(double y, double x)
