@@ -176,7 +176,21 @@ double Exp(double x)
 
 // Raw function: Natural Logarithm
 
-const double ACONST_E = Exp(1.0);
+static double ACONST_E = 0.0;
+
+void init_log()
+{
+    ACONST_E = Exp(1.0);
+}
+
+double GetE()
+{
+    if (ACONST_E == 0.0)
+    {
+      init_log();
+    }
+    return ACONST_E;
+}
 
 double Log(double a)
 {
@@ -208,6 +222,10 @@ double Log(double a)
     // return - (sum)
     //
     double x, p, sum, last, f;
+    if (ACONST_E == 0.0)
+    {
+      init_log();
+    }
     if (a <= 0.0)
     {
       exit(1);
@@ -403,7 +421,21 @@ double ArcTan(double a)
   return r;
 }
 
-const double ACONST_PI = 4.0 * ArcTan(1.0); // 4 * arctan(1)
+static double ACONST_PI = 0.0;
+
+void init_trig()
+{
+    ACONST_PI = 4.0 * ArcTan(1.0); // 4 * arctan(1)
+}
+
+double GetPI()
+{
+    if (ACONST_PI == 0.0)
+    {
+      init_trig();
+    }
+    return ACONST_PI;
+}
 
 double ArcTan2(double y, double x)
 {
@@ -431,6 +463,10 @@ double ArcTan2(double y, double x)
 //      +∞    90°    π/2
 //
     double tmp;
+    if (ACONST_PI == 0.0)
+    {
+      init_trig();
+    }
     if (x == 0.0) // x == 0
     {
         if (y == 0.0) // y == 0
@@ -565,6 +601,10 @@ double ArcCosh(double a)
 double ArcCot(double a)
 {
     double r;
+    if (ACONST_PI == 0.0)
+    {
+      init_trig();
+    }
     if (a == 0.0)
     {
         return Divl((long double)ACONST_PI, (long double)2.0);
@@ -709,6 +749,10 @@ double Sech(double a)
 double RadiansToDegrees(double r)
 {
     double d;
+    if (ACONST_PI == 0.0)
+    {
+      init_trig();
+    }
     d = Divl((long double)ACONST_PI, (long double)2.0);
     d = Divl((long double)r, (long double)d) * 90;
     return d;
@@ -717,6 +761,10 @@ double RadiansToDegrees(double r)
 double DegreesToRadians(double d)
 {
     double r;
+    if (ACONST_PI == 0.0)
+    {
+      init_trig();
+    }
     r = Divl((long double)ACONST_PI, (long double)2.0);
     r *= DivAtom(d, 90);
     return r;
