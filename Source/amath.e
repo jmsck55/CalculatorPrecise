@@ -99,7 +99,7 @@ global function NthRoot(object x, integer n)
   object quotient, average, guess
   guess = power(x, MultInvAtom(n))
   quotient = Div(x, power(guess, n-1))
-  average = Div(quotient + ((n-1) * guess)), n)
+  average = Div((n-1) * guess + quotient, n)
   return average
 end function
 
