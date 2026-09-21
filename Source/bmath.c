@@ -130,7 +130,7 @@ double NthRoot(double x, unsigned int n)
   double quotient, average, guess;
   guess = powerl((long double)x, (long double)MultInvl((long double)n));
   quotient = Divl((long double)x, powerl((long double)guess, (long double)(n-1)));
-  average = Divl(((long double)quotient) + ((long double)(n-1) * (long double)guess)), (long double)n);
+  average = Divl((long double)(n-1) * (long double)guess + (long double)quotient, (long double)n);
   return average;
 }
 
