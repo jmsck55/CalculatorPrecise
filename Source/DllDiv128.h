@@ -15,7 +15,7 @@
 __float128 Absq(__float128 a);
 
 #define WAIT_FOR 10
-#define BMATH_ITERS 10000000
+#define BMATH_ITERS 1000000000
 
 #define RoundDownIf 3
 #define RoundUpIf 4
