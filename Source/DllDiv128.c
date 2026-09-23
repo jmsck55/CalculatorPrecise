@@ -35,9 +35,7 @@ __float128 adjustq(__float128 g)
         {
                 return b;
         }
-        if (
-                (((adjustMethod == 3) || (adjustMethod == 0)) && (c > g))
-                ) // round down. // if (fasbl(c) > fasbl(g)) // round to zero.
+        if ((((adjustMethod == 3) || (adjustMethod == 0)) && (c > g))) // round down. // if (fasbl(c) > fasbl(g)) // round to zero.
         {
                 g *= 2;
                 g -= c;
